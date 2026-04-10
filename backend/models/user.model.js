@@ -1,56 +1,53 @@
 const bcrypt = require("bcrypt");
-const sequelize = require("sequelize");
+const { DataTypes } = require("sequelize");
 const db = require("../config/database");
 
 const User = db.define(
   "user",
   {
     id: {
-      type: sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    email: {
-      type: sequelize.STRING,
+    username: {
+      type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
+    },
+    email: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
+      validate: { isEmail: true },
     },
     password: {
-      type: sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
+    },
+    numero_telefone: {
+      type: DataTypes.STRING(20),
+      allowNull: true,
+    },
+    admin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
   },
   {
-    tableName: "user",
+    tableName: "users",
     timestamps: true,
-    freezeTableName: true
+    freezeTableName: true,
   }
 );
 
-User.beforeCreate((user, options) => {
-  return bcrypt
-    .hash(user.password, 10)
-    .then((hash) => {
-      user.password = hash;
-    })
-    .catch((error) => {
-      throw new Error("Erro ao gerar o hash: " + error.message);
-    });
+User.beforeCreate(async (user) => {
+  user.password = await bcrypt.hash(user.password, 10);
 });
 
-User.beforeUpdate((user, options) => {
+User.beforeUpdate(async (user) => {
   if (user.changed("password")) {
-    return bcrypt
-      .hash(user.password, 10)
-      .then((hash) => {
-        user.password = hash;
-      })
-      .catch((error) => {
-        throw new Error("Erro ao gerar o hash: " + error.message);
-      });
+    user.password = await bcrypt.hash(user.password, 10);
   }
 });
 
