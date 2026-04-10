@@ -16,7 +16,12 @@ endpoints.register = async (req, res) => {
   }
 
   try {
-    const dados = await User.create({ username, email, password, numero_telefone });
+    const dados = await User.create({
+      username,
+      email,
+      password,
+      numero_telefone,
+    });
     const { password: _, ...userSafe } = dados.toJSON();
 
     return res.status(201).json({
@@ -70,7 +75,7 @@ endpoints.login = async (req, res) => {
     const token = jwt.sign(
       { id: user.id, email: user.email, admin: user.admin },
       config.secret,
-      { expiresIn: config.timer }
+      { expiresIn: config.timer },
     );
 
     return res.status(200).json({
@@ -91,18 +96,22 @@ endpoints.refreshToken = async (req, res) => {
   const { token } = req.body;
 
   if (!token) {
-    return res.status(400).json({ success: false, message: "Token não fornecido." });
+    return res
+      .status(400)
+      .json({ success: false, message: "Token não fornecido." });
   }
 
   try {
     jwt.verify(token, config.secret, (err, decoded) => {
       if (err) {
-        return res.status(403).json({ success: false, message: "Token inválido ou expirado." });
+        return res
+          .status(403)
+          .json({ success: false, message: "Token inválido ou expirado." });
       }
       const newToken = jwt.sign(
         { id: decoded.id, email: decoded.email, admin: decoded.admin },
         config.secret,
-        { expiresIn: config.timer }
+        { expiresIn: config.timer },
       );
       return res.status(200).json({
         success: true,
@@ -111,7 +120,9 @@ endpoints.refreshToken = async (req, res) => {
       });
     });
   } catch (error) {
-    return res.status(500).json({ success: false, message: "Erro ao renovar token." });
+    return res
+      .status(500)
+      .json({ success: false, message: "Erro ao renovar token." });
   }
 };
 

@@ -68,4 +68,13 @@ Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 User.hasMany(Favorito, { foreignKey: "userId", as: "favoritos" });
 Favorito.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-module.exports = { User, Genero, Publisher, Jogo, Midia, Literatura, Review, Favorito };
+module.exports = {
+  User,
+  Genero,
+  Publisher,
+  Jogo,
+  Midia,
+  Literatura,
+  Review,
+  Favorito,
+};

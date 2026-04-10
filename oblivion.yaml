@@ -7,7 +7,7 @@ info:
     Desenvolvido para a UC de Programacao III do curso de Multimedia do ISMT.
   contact:
     email: 12938@ismt.pt
-  version: 1.0.0
+  version: 1.1.0
 
 servers:
   - url: http://localhost:5000/api/v1
@@ -37,7 +37,6 @@ tags:
     description: Lista de favoritos do utilizador autenticado
 
 paths:
-
   /register:
     post:
       tags: [auth]
@@ -48,14 +47,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterInput'
+              $ref: "#/components/schemas/Register"
       responses:
-        '201':
+        "201":
           description: Utilizador criado com sucesso
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '409':
-          $ref: '#/components/responses/Conflict'
+        "400":
+          $ref: "#/components/schemas/Error"
+        "409":
+          $ref: "#/components/schemas/Error"
 
   /login:
     post:
@@ -67,16 +66,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginInput'
+              $ref: "#/components/schemas/Login"
       responses:
-        '200':
+        "200":
           description: Token JWT retornado
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TokenResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                $ref: "#/components/schemas/Auth"
+        "401":
+          $ref: "#/components/schemas/Error"
 
   /refresh-token:
     post:
@@ -92,441 +91,457 @@ paths:
                 token:
                   type: string
       responses:
-        '200':
+        "200":
           description: Token renovado
-        '403':
-          $ref: '#/components/responses/Forbidden'
+        "403":
+          $ref: "#/components/schemas/Error"
 
   /logout:
     post:
       tags: [auth]
       summary: Terminar sessao
       responses:
-        '200':
+        "200":
           description: Logout realizado com sucesso
 
   /users:
     get:
       tags: [users]
       summary: Listar todos os utilizadores
+      operationId: getAllUsers
       responses:
-        '200':
+        "200":
           description: Lista de utilizadores
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        "401":
+          $ref: "#/components/schemas/Error"
 
   /users/{id}:
     get:
       tags: [users]
       summary: Obter utilizador por ID
+      operationId: getUserById
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Utilizador encontrado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [users]
       summary: Atualizar utilizador
+      operationId: updateUser
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserUpdateInput'
+              $ref: "#/components/schemas/User"
       responses:
-        '200':
+        "200":
           description: Utilizador atualizado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [users]
       summary: Eliminar utilizador
+      operationId: deleteUser
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Utilizador eliminado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /generos:
     get:
       tags: [generos]
       summary: Listar todos os generos
+      operationId: getAllGen
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de generos
     post:
       tags: [generos]
       summary: Criar novo genero
+      operationId: createGen
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GeneroInput'
+              $ref: "#/components/schemas/Genero"
       responses:
-        '201':
+        "201":
           description: Genero criado
-        '409':
-          $ref: '#/components/responses/Conflict'
+        "409":
+          $ref: "#/components/schemas/Error"
 
   /generos/{id}:
     get:
       tags: [generos]
       summary: Obter genero por ID
+      operationId: getGenById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Genero encontrado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [generos]
       summary: Atualizar genero
+      operationId: updateGen
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GeneroInput'
+              $ref: "#/components/schemas/Genero"
       responses:
-        '200':
+        "200":
           description: Genero atualizado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [generos]
       summary: Eliminar genero
+      operationId: deleteGen
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Genero eliminado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /publishers:
     get:
       tags: [publishers]
       summary: Listar todos os publishers
+      operationId: getAllPublishers
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de publishers
     post:
       tags: [publishers]
       summary: Criar novo publisher
+      operationId: createPublisher
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublisherInput'
+              $ref: "#/components/schemas/Publisher"
       responses:
-        '201':
+        "201":
           description: Publisher criado
 
   /publishers/{id}:
     get:
       tags: [publishers]
       summary: Obter publisher por ID
+      operationId: getPublisherById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Publisher encontrado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [publishers]
       summary: Atualizar publisher
+      operationId: updatePublisher
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PublisherInput'
+              $ref: "#/components/schemas/Publisher"
       responses:
-        '200':
+        "200":
           description: Publisher atualizado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [publishers]
       summary: Eliminar publisher
+      operationId: deletePublisher
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Publisher eliminado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /jogos:
     get:
       tags: [jogos]
       summary: Listar todos os jogos
+      operationId: getAllJogos
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de jogos
     post:
       tags: [jogos]
       summary: Criar novo jogo
+      operationId: createJogo
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JogoInput'
+              $ref: "#/components/schemas/Jogo"
       responses:
-        '201':
+        "201":
           description: Jogo criado
-        '400':
-          $ref: '#/components/responses/BadRequest'
+        "400":
+          $ref: "#/components/schemas/Error"
 
   /jogos/{id}:
     get:
       tags: [jogos]
       summary: Obter jogo por ID
+      operationId: getJogoById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Jogo encontrado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [jogos]
       summary: Atualizar jogo
+      operationId: updateJogo
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/JogoInput'
+              $ref: "#/components/schemas/Jogo"
       responses:
-        '200':
+        "200":
           description: Jogo atualizado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          description: Jogo não encontrado
     delete:
       tags: [jogos]
       summary: Eliminar jogo
+      operationId: deleteJogo
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Jogo eliminado
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /midia:
     get:
       tags: [midia]
       summary: Listar toda a midia
+      operationId: getAllMidia
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de midia
     post:
       tags: [midia]
       summary: Criar nova midia
+      operationId: createMidia
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MidiaInput'
+              $ref: "#/components/schemas/Midia"
       responses:
-        '201':
+        "201":
           description: Midia criada
 
   /midia/{id}:
     get:
       tags: [midia]
       summary: Obter midia por ID
+      operationId: getMidiaById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Midia encontrada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [midia]
       summary: Atualizar midia
+      operationId: updateMidia
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MidiaInput'
+              $ref: "#/components/schemas/Midia"
       responses:
-        '200':
+        "200":
           description: Midia atualizada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [midia]
       summary: Eliminar midia
+      operationId: deleteMidia
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Midia eliminada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /literatura:
     get:
       tags: [literatura]
       summary: Listar toda a literatura
+      operationId: getAllLiteratura
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de literatura
     post:
       tags: [literatura]
       summary: Criar nova literatura
+      operationId: createLiteratura
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LiteraturaInput'
+              $ref: "#/components/schemas/Literatura"
       responses:
-        '201':
+        "201":
           description: Literatura criada
 
   /literatura/{id}:
     get:
       tags: [literatura]
       summary: Obter literatura por ID
+      operationId: getLiteraturaById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Literatura encontrada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     put:
       tags: [literatura]
       summary: Atualizar literatura
+      operationId: updateLiteratura
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LiteraturaInput'
+              $ref: "#/components/schemas/Literatura"
       responses:
-        '200':
+        "200":
           description: Literatura atualizada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [literatura]
       summary: Eliminar literatura
+      operationId: deleteLiteratura
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Literatura eliminada
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /reviews:
     get:
       tags: [reviews]
       summary: Listar todas as reviews
+      operationId: getAllReviews
       security: []
       responses:
-        '200':
+        "200":
           description: Lista de reviews
     post:
       tags: [reviews]
       summary: Criar nova review
+      operationId: createReview
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReviewInput'
+              $ref: "#/components/schemas/Review"
       responses:
-        '201':
+        "201":
           description: Review criada
-        '400':
-          $ref: '#/components/responses/BadRequest'
+        "400":
+          $ref: "#/components/schemas/Error"
 
   /reviews/{id}:
     get:
       tags: [reviews]
       summary: Obter review por ID
+      operationId: getReviewById
       security: []
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Review encontrada
-        '404':
-          $ref: '#/components/responses/NotFound'
-    put:
-      tags: [reviews]
-      summary: Atualizar review (apenas autor ou admin)
-      parameters:
-        - $ref: '#/components/parameters/IdParam'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReviewUpdateInput'
-      responses:
-        '200':
-          description: Review atualizada
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
     delete:
       tags: [reviews]
       summary: Eliminar review (apenas autor ou admin)
+      operationId: deleteReview
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Review eliminada
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "403":
+          $ref: "#/components/schemas/Error"
+        "404":
+          $ref: "#/components/schemas/Error"
 
   /reviews/alvo/{tipo}/{alvoId}:
     get:
       tags: [reviews]
       summary: Obter reviews de um jogo, midia ou literatura
+      operationId: getReviewsByAlvo
       security: []
       parameters:
         - name: tipo
@@ -541,47 +556,49 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Lista de reviews do alvo
-        '400':
-          $ref: '#/components/responses/BadRequest'
+        "400":
+          $ref: "#/components/schemas/Error"
 
   /favoritos:
     get:
       tags: [favoritos]
       summary: Listar favoritos do utilizador autenticado
+      operationId: getFavoritos
       responses:
-        '200':
+        "200":
           description: Lista de favoritos
     post:
       tags: [favoritos]
       summary: Adicionar item aos favoritos
+      operationId: addFavorito
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FavoritoInput'
+              $ref: "#/components/schemas/Favorito"
       responses:
-        '201':
+        "201":
           description: Adicionado aos favoritos
-        '409':
-          $ref: '#/components/responses/Conflict'
+        "409":
+          $ref: "#/components/schemas/Error"
 
   /favoritos/{id}:
     delete:
       tags: [favoritos]
       summary: Remover item dos favoritos
+      operationId: removeFavorito
       parameters:
-        - $ref: '#/components/parameters/IdParam'
+        - $ref: "#/components/parameters/IdParam"
       responses:
-        '200':
+        "200":
           description: Removido dos favoritos
-        '404':
-          $ref: '#/components/responses/NotFound'
+        "404":
+          $ref: "#/components/schemas/Error"
 
 components:
-
   securitySchemes:
     bearerAuth:
       type: http
@@ -597,61 +614,8 @@ components:
       schema:
         type: integer
 
-  responses:
-    BadRequest:
-      description: Dados invalidos ou em falta
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Token em falta ou invalido
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Forbidden:
-      description: Sem permissao para este recurso
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: Recurso nao encontrado
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Conflict:
-      description: Recurso ja existe
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-
   schemas:
-
-    Error:
-      type: object
-      required: [status, message]
-      properties:
-        status:
-          type: string
-          example: error
-        message:
-          type: string
-
-    TokenResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-        message:
-          type: string
-        AccessToken:
-          type: string
-
-    RegisterInput:
+    Register:
       type: object
       required: [username, email, password]
       properties:
@@ -666,7 +630,7 @@ components:
         numero_telefone:
           type: string
 
-    LoginInput:
+    Login:
       type: object
       required: [email, password]
       properties:
@@ -675,26 +639,40 @@ components:
           format: email
         password:
           type: string
-
-    UserUpdateInput:
+    User:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
+          example: [1]
         username:
           type: string
+          example: [gamer123]
         email:
           type: string
-        numero_telefone:
+          format: email
+          example: [badgal@yahoo.pt]
+        password:
           type: string
+          example: [password123]
+        idade:
+          type: integer
+          example: [25]
 
-    GeneroInput:
+    Genero:
       type: object
-      required: [nome]
+      required: [nome, id]
       properties:
+        id:
+          type: integer
+          format: int64
+          example: [1]
         nome:
           type: string
-          example: RPG
+          example: [RPG]
 
-    PublisherInput:
+    Publisher:
       type: object
       required: [nome]
       properties:
@@ -704,7 +682,7 @@ components:
         bio:
           type: string
 
-    JogoInput:
+    Jogo:
       type: object
       required: [nome]
       properties:
@@ -724,7 +702,7 @@ components:
             type: integer
           example: [1, 3]
 
-    MidiaInput:
+    Midia:
       type: object
       required: [nome, tipo]
       properties:
@@ -746,63 +724,94 @@ components:
           items:
             type: integer
 
-    LiteraturaInput:
+    Literatura:
       type: object
       required: [nome]
       properties:
         nome:
           type: string
+          example: [Dark Souls: Design Works]
         autor:
           type: string
+          example: [Takeshi Obata]
         descricao:
           type: string
+          example: [Livro de arte e design do jogo Dark Souls]
         ano_publicacao:
           type: integer
+          example: [2011]
         imagem_url:
           type: string
+          example: [https://example.com/dark-souls-design-works.jpg]
         publisherId:
           type: integer
+          example: [1]
         generosIds:
           type: array
           items:
             type: integer
+          example: [1, 3]
 
-    ReviewInput:
+    Review:
       type: object
       required: [titulo, conteudo, pontuacao, tipo_alvo, alvo_id]
       properties:
         titulo:
           type: string
+          example: [Review de Dark Souls]
         conteudo:
           type: string
+          example:
+            [
+              Excelente jogo com uma atmosfera única e desafiadora. A jogabilidade é fluida e a história é envolvente,
+              tornando-se um dos melhores RPGs de todos os tempos.,
+            ]
         pontuacao:
-          type: integer
+          type: number
+          format: float
           minimum: 1
-          maximum: 10
+          maximum: 5
         tipo_alvo:
           type: string
           enum: [jogo, midia, literatura]
+          example: [jogo]
         alvo_id:
           type: integer
+          example: [1]
 
-    ReviewUpdateInput:
-      type: object
-      properties:
-        titulo:
-          type: string
-        conteudo:
-          type: string
-        pontuacao:
-          type: integer
-          minimum: 1
-          maximum: 10
-
-    FavoritoInput:
+    Favorito:
       type: object
       required: [tipo_alvo, alvo_id]
       properties:
+        userId:
+          type: integer
+
         tipo_alvo:
           type: string
           enum: [jogo, midia, literatura]
         alvo_id:
           type: integer
+          example: [1]
+
+    Auth:
+      type: object
+      properties:
+        AccessToken:
+          type: string
+          description: Token JWT de acesso
+          example: [eyJhbGciOiJIUzI1NiIsInR]
+        RefreshToken:
+          type: string
+          description: Token de atualização para renovar o acesso
+          example: [dGhpcyByZWZyZXNoIHRva2Vu]
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        code:
+          type: integer
+      example:
+        message: Recurso não encontrado
+        code: 404
