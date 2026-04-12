@@ -164,4 +164,55 @@ endpoints.deleteLiteratura = async (req, res) => {
   }
 };
 
+// GET /literatura/publisher/:publisherId
+endpoints.getLiteraturaByPublisher = async (req, res) => {
+  const { publisherId } = req.params;
+  try {
+    const dados = await Literatura.findAll({
+      where: { publisherId },
+      include: includeOpts,
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Literatura do publisher #${publisherId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar literatura por publisher.",
+      data: null,
+    });
+  }
+};
+
+// GET /literatura/genero/:generoId
+endpoints.getLiteraturaByGenero = async (req, res) => {
+  const { generoId } = req.params;
+  try {
+    const dados = await Literatura.findAll({
+      include: [
+        { model: Publisher, as: "publisher" },
+        {
+          model: Genero,
+          as: "generos",
+          where: { id: generoId },
+          through: { attributes: [] },
+        },
+      ],
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Literatura do género #${generoId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar literatura por género.",
+      data: null,
+    });
+  }
+};
+
 module.exports = endpoints;

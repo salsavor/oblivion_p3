@@ -142,4 +142,55 @@ endpoints.deleteJogo = async (req, res) => {
   }
 };
 
+// GET /jogos/publisher/:publisherId
+endpoints.getJogosByPublisher = async (req, res) => {
+  const { publisherId } = req.params;
+  try {
+    const dados = await Jogo.findAll({
+      where: { publisherId },
+      include: includeOpts,
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Jogos do publisher #${publisherId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar jogos por publisher.",
+      data: null,
+    });
+  }
+};
+
+// GET /jogos/genero/:generoId
+endpoints.getJogosByGenero = async (req, res) => {
+  const { generoId } = req.params;
+  try {
+    const dados = await Jogo.findAll({
+      include: [
+        { model: Publisher, as: "publisher" },
+        {
+          model: Genero,
+          as: "generos",
+          where: { id: generoId },
+          through: { attributes: [] },
+        },
+      ],
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Jogos do género #${generoId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar jogos por género.",
+      data: null,
+    });
+  }
+};
+
 module.exports = endpoints;

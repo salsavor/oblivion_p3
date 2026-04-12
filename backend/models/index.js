@@ -1,6 +1,3 @@
-// Este ficheiro centraliza todas as associações entre modelos Sequelize.
-// Importar AQUI e apenas aqui para evitar dependências circulares.
-
 const User = require("./user.model");
 const Genero = require("./genero.model");
 const Publisher = require("./publisher.model");
@@ -10,7 +7,7 @@ const Literatura = require("./literatura.model");
 const Review = require("./review.model");
 const Favorito = require("./favorito.model");
 
-// ── Publisher ──────────────────────────────────────────────
+// ── Publisher 
 Publisher.hasMany(Jogo, { foreignKey: "publisherId", as: "jogos" });
 Jogo.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 
@@ -20,7 +17,7 @@ Midia.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 Publisher.hasMany(Literatura, { foreignKey: "publisherId", as: "literatura" });
 Literatura.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 
-// ── Género (many-to-many) ──────────────────────────────────
+// ── Género (muitos para muitos) 
 Jogo.belongsToMany(Genero, {
   through: "jogo_generos",
   foreignKey: "jogoId",
@@ -60,21 +57,12 @@ Genero.belongsToMany(Literatura, {
   as: "literatura",
 });
 
-// ── Reviews ────────────────────────────────────────────────
+// ── Reviews (muitos para um)
 User.hasMany(Review, { foreignKey: "userId", as: "reviews" });
 Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-// ── Favoritos ──────────────────────────────────────────────
+// ── Favoritos (muitos para um)
 User.hasMany(Favorito, { foreignKey: "userId", as: "favoritos" });
 Favorito.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-module.exports = {
-  User,
-  Genero,
-  Publisher,
-  Jogo,
-  Midia,
-  Literatura,
-  Review,
-  Favorito,
-};
+module.exports = { User, Genero, Publisher, Jogo, Midia, Literatura, Review, Favorito };

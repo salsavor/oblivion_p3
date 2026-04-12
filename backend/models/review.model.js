@@ -22,7 +22,6 @@ const Review = db.define(
       allowNull: false,
       validate: { min: 1, max: 10 },
     },
-    // Polimorfismo: tipo indica a que entidade pertence
     tipo_alvo: {
       type: DataTypes.ENUM("jogo", "midia", "literatura"),
       allowNull: false,
@@ -40,7 +39,7 @@ const Review = db.define(
     tableName: "reviews",
     timestamps: true,
     freezeTableName: true,
-  },
+  }
 );
 
 module.exports = Review;

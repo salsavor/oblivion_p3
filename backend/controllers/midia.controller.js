@@ -164,4 +164,55 @@ endpoints.deleteMidia = async (req, res) => {
   }
 };
 
+// GET /midia/publisher/:publisherId
+endpoints.getMidiaByPublisher = async (req, res) => {
+  const { publisherId } = req.params;
+  try {
+    const dados = await Midia.findAll({
+      where: { publisherId },
+      include: includeOpts,
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Midia do publisher #${publisherId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar midia por publisher.",
+      data: null,
+    });
+  }
+};
+
+// GET /midia/genero/:generoId
+endpoints.getMidiaByGenero = async (req, res) => {
+  const { generoId } = req.params;
+  try {
+    const dados = await Midia.findAll({
+      include: [
+        { model: Publisher, as: "publisher" },
+        {
+          model: Genero,
+          as: "generos",
+          where: { id: generoId },
+          through: { attributes: [] },
+        },
+      ],
+    });
+    return res.status(200).json({
+      status: "success",
+      message: `Midia do género #${generoId}.`,
+      data: dados,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar midia por género.",
+      data: null,
+    });
+  }
+};
+
 module.exports = endpoints;

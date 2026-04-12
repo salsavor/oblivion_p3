@@ -5,7 +5,7 @@ const reviewController = require("../controllers/review.controller");
 
 router.get("/reviews", reviewController.getAllReviews);
 router.get("/reviews/:id", reviewController.getReviewById);
-// Obter reviews por alvo: /reviews/alvo/jogo/1
+// Obter reviews por tag
 router.get("/reviews/alvo/:tipo/:alvoId", reviewController.getReviewsByAlvo);
 router.post("/reviews", middleware.checkToken, reviewController.createReview);
 router.put(
