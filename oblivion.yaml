@@ -26,7 +26,7 @@ tags:
   - name: midia
     description: Gestao de midia (filmes, series, anime, documentarios)
   - name: literatura
-    description: Gestao de literatura relacionada com jogos
+    description: Gestao de literatura relacionada com jogos (livros, comics, mangas)
   - name: reviews
     description: Reviews de jogos, midia e literatura
   - name: generos
@@ -39,7 +39,8 @@ tags:
 paths:
   /register:
     post:
-      tags: [auth]
+      tags: 
+        - auth
       summary: Registar novo utilizador
       security: []
       requestBody:
@@ -51,14 +52,19 @@ paths:
       responses:
         "201":
           description: Utilizador criado com sucesso
+          $ref: "#/components/schemas/Auth"
         "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
-        "409":
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
+        
 
   /login:
     post:
-      tags: [auth]
+      tags: 
+        - auth
       summary: Autenticar utilizador
       security: []
       requestBody:
@@ -79,7 +85,8 @@ paths:
 
   /refresh-token:
     post:
-      tags: [auth]
+      tags: 
+        - auth
       summary: Renovar token JWT
       requestBody:
         required: true
@@ -98,26 +105,49 @@ paths:
 
   /logout:
     post:
-      tags: [auth]
+      tags: 
+        - auth
       summary: Terminar sessao
       responses:
         "200":
           description: Logout realizado com sucesso
+          $ref: "#/components/schemas/Auth"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: User não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /users:
     get:
-      tags: [users]
+      tags: 
+        - users
       summary: Listar todos os utilizadores
       operationId: getAllUsers
       responses:
         "200":
           description: Lista de utilizadores
-        "401":
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: User não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /users/{id}:
     get:
-      tags: [users]
+      tags: 
+        - users
       summary: Obter utilizador por ID
       operationId: getUserById
       parameters:
@@ -125,10 +155,19 @@ paths:
       responses:
         "200":
           description: Utilizador encontrado
+          $ref: "#/components/schemas/User"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: User não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
     put:
-      tags: [users]
+      tags: 
+        - users
       summary: Atualizar utilizador
       operationId: updateUser
       parameters:
@@ -142,10 +181,20 @@ paths:
       responses:
         "200":
           description: Utilizador atualizado
-        "404":
+          $ref: "#/components/schemas/User"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: User não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     delete:
-      tags: [users]
+      tags: 
+        - users
       summary: Eliminar utilizador
       operationId: deleteUser
       parameters:
@@ -153,22 +202,42 @@ paths:
       responses:
         "200":
           description: Utilizador eliminado
+          $ref: "#/components/schemas/User"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: User não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /generos:
     get:
-      tags: [generos]
+      tags: 
+        - generos
       summary: Listar todos os generos
-      operationId: getAllGen
+      operationId: getAllGenero
       security: []
       responses:
         "200":
           description: Lista de generos
+          $ref: "#/components/schemas/Genero"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Genero não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
     post:
-      tags: [generos]
+      tags: 
+        - generos
       summary: Criar novo genero
-      operationId: createGen
+      operationId: createGenero
       requestBody:
         required: true
         content:
@@ -178,24 +247,42 @@ paths:
       responses:
         "201":
           description: Genero criado
-        "409":
+          $ref: "#/components/schemas/Genero"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Genero não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /generos/{id}:
     get:
-      tags: [generos]
+      tags: 
+        - generos
       summary: Obter genero por ID
-      operationId: getGenById
+      operationId: getGeneroById
       security: []
       parameters:
         - $ref: "#/components/parameters/IdParam"
       responses:
         "200":
           description: Genero encontrado
+          $ref: "#/components/schemas/Genero"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Genero não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
     put:
-      tags: [generos]
+      tags: 
+        - generos
       summary: Atualizar genero
       operationId: updateGen
       parameters:
@@ -209,31 +296,60 @@ paths:
       responses:
         "200":
           description: Genero atualizado
+          $ref: "#/components/schemas/Genero"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Genero não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
     delete:
-      tags: [generos]
+      tags: 
+        - generos
       summary: Eliminar genero
-      operationId: deleteGen
+      operationId: deleteGenero
       parameters:
         - $ref: "#/components/parameters/IdParam"
       responses:
         "200":
           description: Genero eliminado
+          $ref: "#/components/schemas/Genero"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Genero não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /publishers:
     get:
-      tags: [publishers]
+      tags: 
+        - publishers
       summary: Listar todos os publishers
       operationId: getAllPublishers
       security: []
       responses:
         "200":
           description: Lista de publishers
+          $ref: "#/components/schemas/Publisher"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Publisher não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
     post:
-      tags: [publishers]
+      tags: 
+        - publishers
       summary: Criar novo publisher
       operationId: createPublisher
       requestBody:
@@ -245,10 +361,21 @@ paths:
       responses:
         "201":
           description: Publisher criado
+          $ref: "#/components/schemas/Publisher"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Publisher não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
 
   /publishers/{id}:
     get:
-      tags: [publishers]
+      tags: 
+        - publishers
       summary: Obter publisher por ID
       operationId: getPublisherById
       security: []
@@ -257,10 +384,19 @@ paths:
       responses:
         "200":
           description: Publisher encontrado
+          $ref: "#/components/schemas/Publisher"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Publisher não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
     put:
-      tags: [publishers]
+      tags: 
+        - publishers
       summary: Atualizar publisher
       operationId: updatePublisher
       parameters:
@@ -274,10 +410,20 @@ paths:
       responses:
         "200":
           description: Publisher atualizado
-        "404":
+          $ref: "#/components/schemas/Publisher"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Publisher não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     delete:
-      tags: [publishers]
+      tags: 
+        - publishers
       summary: Eliminar publisher
       operationId: deletePublisher
       parameters:
@@ -285,23 +431,68 @@ paths:
       responses:
         "200":
           description: Publisher eliminado
+          $ref: "#/components/schemas/Publisher"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Publisher não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /jogos:
     get:
-      tags: [jogos]
+      tags:
+        - jogos
       summary: Listar todos os jogos
-      operationId: getAllJogos
+      description: Lista todos os jogos na base de dados.
+      operationId: getAllGames
+      parameters:
+        - name: nome
+          in: query
+          required: false
+          description: Titulo do jogo para filtrar
+          schema:
+            type: string
+            example: Dark Souls
       security: []
       responses:
         "200":
-          description: Lista de jogos
+          description: Jogos listados com sucesso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Jogo"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Nenhum jogo encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
+        
     post:
-      tags: [jogos]
-      summary: Criar novo jogo
-      operationId: createJogo
+      tags: 
+        - jogos
+      summary: Criar novo jogo para review
+      operationId: createGame
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          description: Token JWT de acesso (Bearer token)
+          schema:
+            type: string
+            example: Bearer eyJ
       requestBody:
+        description: Dados do jogo a criar
         required: true
         content:
           application/json:
@@ -309,28 +500,51 @@ paths:
               $ref: "#/components/schemas/Jogo"
       responses:
         "201":
-          description: Jogo criado
+          description: Jogo criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jogo"
         "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
 
   /jogos/{id}:
     get:
-      tags: [jogos]
+      tags: 
+        - jogos
       summary: Obter jogo por ID
-      operationId: getJogoById
+      operationId: getGameById
       security: []
       parameters:
         - $ref: "#/components/parameters/IdParam"
       responses:
         "200":
           description: Jogo encontrado
-        "404":
+          content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/Jogo"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Jogo não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     put:
-      tags: [jogos]
+      tags: 
+        - jogos
       summary: Atualizar jogo
-      operationId: updateJogo
-      parameters:
+      operationId: updateGame
+      parameters: 
         - $ref: "#/components/parameters/IdParam"
       requestBody:
         required: true
@@ -341,31 +555,65 @@ paths:
       responses:
         "200":
           description: Jogo atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Jogo"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
           description: Jogo não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     delete:
-      tags: [jogos]
+      tags: 
+        - jogos
       summary: Eliminar jogo
-      operationId: deleteJogo
+      operationId: deleteGame
       parameters:
         - $ref: "#/components/parameters/IdParam"
       responses:
         "200":
           description: Jogo eliminado
+          $ref: "#/components/schemas/Jogo"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Jogo não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /midia:
     get:
-      tags: [midia]
+      tags: 
+        - midia
       summary: Listar toda a midia
       operationId: getAllMidia
       security: []
       responses:
         "200":
           description: Lista de midia
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Midia não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     post:
-      tags: [midia]
+      tags: 
+        - midia
       summary: Criar nova midia
       operationId: createMidia
       requestBody:
@@ -377,10 +625,19 @@ paths:
       responses:
         "201":
           description: Midia criada
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /midia/{id}:
     get:
-      tags: [midia]
+      tags: 
+        - midia
       summary: Obter midia por ID
       operationId: getMidiaById
       security: []
@@ -389,10 +646,20 @@ paths:
       responses:
         "200":
           description: Midia encontrada
-        "404":
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Midia não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     put:
-      tags: [midia]
+      tags: 
+        - midia
       summary: Atualizar midia
       operationId: updateMidia
       parameters:
@@ -406,10 +673,20 @@ paths:
       responses:
         "200":
           description: Midia atualizada
-        "404":
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Midia não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     delete:
-      tags: [midia]
+      tags: 
+        - midia
       summary: Eliminar midia
       operationId: deleteMidia
       parameters:
@@ -417,20 +694,42 @@ paths:
       responses:
         "200":
           description: Midia eliminada
-        "404":
+          $ref: "#/components/schemas/Midia"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Midia não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /literatura:
     get:
-      tags: [literatura]
+      tags: 
+        - literatura
       summary: Listar toda a literatura
       operationId: getAllLiteratura
       security: []
       responses:
         "200":
           description: Lista de literatura
+          $ref: "#/components/schemas/Literatura"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Literatura não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     post:
-      tags: [literatura]
+      tags: 
+        - literatura
       summary: Criar nova literatura
       operationId: createLiteratura
       requestBody:
@@ -442,10 +741,19 @@ paths:
       responses:
         "201":
           description: Literatura criada
+          $ref: "#/components/schemas/Literatura"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /literatura/{id}:
     get:
-      tags: [literatura]
+      tags: 
+        - literatura
       summary: Obter literatura por ID
       operationId: getLiteraturaById
       security: []
@@ -454,10 +762,20 @@ paths:
       responses:
         "200":
           description: Literatura encontrada
-        "404":
+          $ref: "#/components/schemas/Literatura"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Literatura não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     put:
-      tags: [literatura]
+      tags: 
+        - literatura
       summary: Atualizar literatura
       operationId: updateLiteratura
       parameters:
@@ -471,10 +789,20 @@ paths:
       responses:
         "200":
           description: Literatura atualizada
-        "404":
+          $ref: "#/components/schemas/Literatura"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Literatura não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     delete:
-      tags: [literatura]
+      tags: 
+        - literatura
       summary: Eliminar literatura
       operationId: deleteLiteratura
       parameters:
@@ -482,20 +810,42 @@ paths:
       responses:
         "200":
           description: Literatura eliminada
-        "404":
+          $ref: "#/components/schemas/Literatura"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Literatura não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
 
   /reviews:
     get:
-      tags: [reviews]
+      tags: 
+        - reviews
       summary: Listar todas as reviews
       operationId: getAllReviews
       security: []
       responses:
         "200":
           description: Lista de reviews
+          $ref: "#/components/schemas/Review"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Review não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+        
     post:
-      tags: [reviews]
+      tags: 
+        - reviews
       summary: Criar nova review
       operationId: createReview
       requestBody:
@@ -507,12 +857,21 @@ paths:
       responses:
         "201":
           description: Review criada
+          $ref: "#/components/schemas/Review"
         "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Review não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /reviews/{id}:
     get:
-      tags: [reviews]
+      tags: 
+        - reviews
       summary: Obter review por ID
       operationId: getReviewById
       security: []
@@ -521,10 +880,20 @@ paths:
       responses:
         "200":
           description: Review encontrada
-        "404":
+          $ref: "#/components/schemas/Review"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
+        "404":
+          description: Review não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
+
     delete:
-      tags: [reviews]
+      tags: 
+        - reviews
       summary: Eliminar review (apenas autor ou admin)
       operationId: deleteReview
       parameters:
@@ -532,14 +901,21 @@ paths:
       responses:
         "200":
           description: Review eliminada
-        "403":
+          $ref: "#/components/schemas/Review"
+        "400":
+          description: Requisição inválida
           $ref: "#/components/schemas/Error"
         "404":
+          description: Review não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /reviews/alvo/{tipo}/{alvoId}:
     get:
-      tags: [reviews]
+      tags: 
+        - reviews
       summary: Obter reviews de um jogo, midia ou literatura
       operationId: getReviewsByAlvo
       security: []
@@ -558,19 +934,39 @@ paths:
       responses:
         "200":
           description: Lista de reviews do alvo
+          $ref: "#/components/schemas/Review"
         "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Review não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /favoritos:
     get:
-      tags: [favoritos]
+      tags: 
+        - favoritos
       summary: Listar favoritos do utilizador autenticado
       operationId: getFavoritos
       responses:
         "200":
           description: Lista de favoritos
+          $ref: "#/components/schemas/Favorito"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "404":
+          description: Favorito não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
+          $ref: "#/components/schemas/Error"
     post:
-      tags: [favoritos]
+      tags: 
+        - favoritos
       summary: Adicionar item aos favoritos
       operationId: addFavorito
       requestBody:
@@ -582,12 +978,18 @@ paths:
       responses:
         "201":
           description: Adicionado aos favoritos
-        "409":
+          $ref: "#/components/schemas/Favorito"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
   /favoritos/{id}:
     delete:
-      tags: [favoritos]
+      tags: 
+        - favoritos
       summary: Remover item dos favoritos
       operationId: removeFavorito
       parameters:
@@ -595,7 +997,15 @@ paths:
       responses:
         "200":
           description: Removido dos favoritos
+          $ref: "#/components/schemas/Favorito"
+        "400":
+          description: Requisição inválida
+          $ref: "#/components/schemas/Error"
         "404":
+          description: Favorito não encontrado
+          $ref: "#/components/schemas/Error"
+        "500":
+          description: Erro interno do servidor
           $ref: "#/components/schemas/Error"
 
 components:
