@@ -13,7 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
-import PageNotFound from "./components/PageNotFound/PageNotFound";
+import PageNotFound from "./components/PageNotFound";
 
 export default function App() {
   return (
