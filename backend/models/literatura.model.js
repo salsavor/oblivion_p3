@@ -38,7 +38,7 @@ const Literatura = db.define(
     tableName: "literatura",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Literatura;

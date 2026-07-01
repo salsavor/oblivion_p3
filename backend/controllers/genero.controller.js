@@ -10,13 +10,12 @@ endpoints.getAllGeneros = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Lista de géneros.", data: dados });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao listar géneros.",
-        data: null,
-      });
+    console.error("[genero] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar géneros.",
+      data: null,
+    });
   }
 };
 
@@ -26,17 +25,16 @@ endpoints.getGeneroById = async (req, res) => {
   try {
     const dados = await Genero.findByPk(id);
     if (!dados)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Género não encontrado.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Género não encontrado.",
+        data: null,
+      });
     return res
       .status(200)
       .json({ status: "success", message: "Género encontrado.", data: dados });
   } catch (error) {
+    console.error("[genero] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao obter género.", data: null });
@@ -56,6 +54,7 @@ endpoints.createGenero = async (req, res) => {
       .status(201)
       .json({ status: "success", message: "Género criado.", data: dados });
   } catch (error) {
+    console.error("[genero] Erro:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
       return res
         .status(409)
@@ -74,25 +73,22 @@ endpoints.updateGenero = async (req, res) => {
   try {
     const genero = await Genero.findByPk(id);
     if (!genero)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Género não encontrado.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Género não encontrado.",
+        data: null,
+      });
     await genero.update({ nome });
     return res
       .status(200)
       .json({ status: "success", message: "Género atualizado.", data: genero });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao atualizar género.",
-        data: null,
-      });
+    console.error("[genero] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao atualizar género.",
+      data: null,
+    });
   }
 };
 
@@ -102,25 +98,22 @@ endpoints.deleteGenero = async (req, res) => {
   try {
     const genero = await Genero.findByPk(id);
     if (!genero)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Género não encontrado.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Género não encontrado.",
+        data: null,
+      });
     await genero.destroy();
     return res
       .status(200)
       .json({ status: "success", message: "Género eliminado.", data: null });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao eliminar género.",
-        data: null,
-      });
+    console.error("[genero] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao eliminar género.",
+      data: null,
+    });
   }
 };
 

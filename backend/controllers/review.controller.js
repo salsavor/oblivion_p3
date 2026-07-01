@@ -15,13 +15,12 @@ endpoints.getAllReviews = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Lista de reviews.", data: dados });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao listar reviews.",
-        data: null,
-      });
+    console.error("[review] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar reviews.",
+      data: null,
+    });
   }
 };
 
@@ -33,17 +32,16 @@ endpoints.getReviewById = async (req, res) => {
       include: [{ model: User, as: "user", attributes: ["id", "username"] }],
     });
     if (!dados)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Review não encontrada.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Review não encontrada.",
+        data: null,
+      });
     return res
       .status(200)
       .json({ status: "success", message: "Review encontrada.", data: dados });
   } catch (error) {
+    console.error("[review] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao obter review.", data: null });
@@ -54,13 +52,11 @@ endpoints.getReviewById = async (req, res) => {
 endpoints.getReviewsByAlvo = async (req, res) => {
   const { tipo, alvoId } = req.params;
   if (!TIPOS_VALIDOS.includes(tipo)) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Tipo inválido. Use: jogo, midia ou literatura.",
-        data: null,
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "Tipo inválido. Use: jogo, midia ou literatura.",
+      data: null,
+    });
   }
   try {
     const dados = await Review.findAll({
@@ -68,21 +64,18 @@ endpoints.getReviewsByAlvo = async (req, res) => {
       include: [{ model: User, as: "user", attributes: ["id", "username"] }],
       order: [["createdAt", "DESC"]],
     });
-    return res
-      .status(200)
-      .json({
-        status: "success",
-        message: `Reviews de ${tipo} #${alvoId}.`,
-        data: dados,
-      });
+    return res.status(200).json({
+      status: "success",
+      message: `Reviews de ${tipo} #${alvoId}.`,
+      data: dados,
+    });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao listar reviews.",
-        data: null,
-      });
+    console.error("[review] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao listar reviews.",
+      data: null,
+    });
   }
 };
 
@@ -92,31 +85,25 @@ endpoints.createReview = async (req, res) => {
   const userId = req.decoded.id;
 
   if (!titulo || !conteudo || !pontuacao || !tipo_alvo || !alvo_id) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Todos os campos são obrigatórios.",
-        data: null,
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "Todos os campos são obrigatórios.",
+      data: null,
+    });
   }
   if (!TIPOS_VALIDOS.includes(tipo_alvo)) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Tipo inválido. Use: jogo, midia ou literatura.",
-        data: null,
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "Tipo inválido. Use: jogo, midia ou literatura.",
+      data: null,
+    });
   }
   if (pontuacao < 1 || pontuacao > 10) {
-    return res
-      .status(400)
-      .json({
-        status: "error",
-        message: "Pontuação deve ser entre 1 e 10.",
-        data: null,
-      });
+    return res.status(400).json({
+      status: "error",
+      message: "Pontuação deve ser entre 1 e 10.",
+      data: null,
+    });
   }
 
   try {
@@ -132,6 +119,7 @@ endpoints.createReview = async (req, res) => {
       .status(201)
       .json({ status: "success", message: "Review criada.", data: dados });
   } catch (error) {
+    console.error("[review] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao criar review.", data: null });
@@ -147,23 +135,19 @@ endpoints.updateReview = async (req, res) => {
   try {
     const review = await Review.findByPk(id);
     if (!review)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Review não encontrada.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Review não encontrada.",
+        data: null,
+      });
 
     // Só o autor ou admin podem editar
     if (review.userId !== userId && !req.decoded.admin) {
-      return res
-        .status(403)
-        .json({
-          status: "error",
-          message: "Sem permissão para editar esta review.",
-          data: null,
-        });
+      return res.status(403).json({
+        status: "error",
+        message: "Sem permissão para editar esta review.",
+        data: null,
+      });
     }
 
     await review.update({ titulo, conteudo, pontuacao });
@@ -171,13 +155,12 @@ endpoints.updateReview = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Review atualizada.", data: review });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao atualizar review.",
-        data: null,
-      });
+    console.error("[review] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao atualizar review.",
+      data: null,
+    });
   }
 };
 
@@ -189,22 +172,18 @@ endpoints.deleteReview = async (req, res) => {
   try {
     const review = await Review.findByPk(id);
     if (!review)
-      return res
-        .status(404)
-        .json({
-          status: "error",
-          message: "Review não encontrada.",
-          data: null,
-        });
+      return res.status(404).json({
+        status: "error",
+        message: "Review não encontrada.",
+        data: null,
+      });
 
     if (review.userId !== userId && !req.decoded.admin) {
-      return res
-        .status(403)
-        .json({
-          status: "error",
-          message: "Sem permissão para eliminar esta review.",
-          data: null,
-        });
+      return res.status(403).json({
+        status: "error",
+        message: "Sem permissão para eliminar esta review.",
+        data: null,
+      });
     }
 
     await review.destroy();
@@ -212,13 +191,12 @@ endpoints.deleteReview = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Review eliminada.", data: null });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao eliminar review.",
-        data: null,
-      });
+    console.error("[review] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao eliminar review.",
+      data: null,
+    });
   }
 };
 

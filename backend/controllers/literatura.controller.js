@@ -1,4 +1,5 @@
 const { Literatura, Publisher, Genero } = require("../models");
+const { Op } = require("sequelize");
 
 const endpoints = {};
 
@@ -17,6 +18,7 @@ endpoints.getAllLiteratura = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao listar literatura.",
@@ -42,6 +44,7 @@ endpoints.getLiteraturaById = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao obter literatura.",
@@ -83,6 +86,7 @@ endpoints.createLiteratura = async (req, res) => {
       .status(201)
       .json({ status: "success", message: "Literatura criada.", data: dados });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao criar literatura.",
@@ -130,6 +134,7 @@ endpoints.updateLiteratura = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao atualizar literatura.",
@@ -156,6 +161,7 @@ endpoints.deleteLiteratura = async (req, res) => {
       data: null,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao eliminar literatura.",
@@ -178,6 +184,7 @@ endpoints.getLiteraturaByPublisher = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao listar literatura por publisher.",
@@ -207,6 +214,7 @@ endpoints.getLiteraturaByGenero = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[literatura] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao listar literatura por género.",

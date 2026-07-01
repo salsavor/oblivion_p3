@@ -22,7 +22,7 @@ const Publisher = db.define(
     tableName: "publishers",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Publisher;

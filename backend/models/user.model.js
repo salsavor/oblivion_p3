@@ -41,13 +41,27 @@ const User = db.define(
   },
 );
 
-User.beforeCreate(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
+User.beforeCreate((user, options) => {
+  return bcrypt
+    .hash(user.password, 10)
+    .then((hash) => {
+      user.password = hash;
+    })
+    .catch((error) => {
+      throw new Error("Erro ao gerar o hash: " + error.message);
+    });
 });
 
-User.beforeUpdate(async (user) => {
+User.beforeUpdate((user, options) => {
   if (user.changed("password")) {
-    user.password = await bcrypt.hash(user.password, 10);
+    return bcrypt
+      .hash(user.password, 10)
+      .then((hash) => {
+        user.password = hash;
+      })
+      .catch((error) => {
+        throw new Error("Erro ao gerar o hash: " + error.message);
+      });
   }
 });
 

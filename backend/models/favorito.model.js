@@ -26,7 +26,7 @@ const Favorito = db.define(
     tableName: "favoritos",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Favorito;

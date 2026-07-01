@@ -12,7 +12,7 @@ const Midia = db.define(
     nome: {
       type: DataTypes.STRING(150),
       allowNull: false,
-    },
+    },W
     tipo: {
       type: DataTypes.ENUM("Filme", "Serie", "Anime", "Documentario"),
       allowNull: false,
@@ -38,7 +38,7 @@ const Midia = db.define(
     tableName: "midia",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Midia;

@@ -7,7 +7,7 @@ const Literatura = require("./literatura.model");
 const Review = require("./review.model");
 const Favorito = require("./favorito.model");
 
-// ── Publisher 
+// ── Publisher
 Publisher.hasMany(Jogo, { foreignKey: "publisherId", as: "jogos" });
 Jogo.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 
@@ -17,7 +17,7 @@ Midia.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 Publisher.hasMany(Literatura, { foreignKey: "publisherId", as: "literatura" });
 Literatura.belongsTo(Publisher, { foreignKey: "publisherId", as: "publisher" });
 
-// ── Género (muitos para muitos) 
+// ── Género (muitos para muitos)
 Jogo.belongsToMany(Genero, {
   through: "jogo_generos",
   foreignKey: "jogoId",
@@ -61,8 +61,39 @@ Genero.belongsToMany(Literatura, {
 User.hasMany(Review, { foreignKey: "userId", as: "reviews" });
 Review.belongsTo(User, { foreignKey: "userId", as: "user" });
 
+Jogo.hasMany(Review, { foreignKey: "jogoId", as: "reviews" });
+Review.belongsTo(Jogo, { foreignKey: "jogoId", as: "jogo" });
+
+Midia.hasMany(Review, { foreignKey: "midiaId", as: "reviews" });
+Review.belongsTo(Midia, { foreignKey: "midiaId", as: "midia" });
+
+Literatura.hasMany(Review, { foreignKey: "literaturaId", as: "reviews" });
+Review.belongsTo(Literatura, { foreignKey: "literaturaId", as: "literatura" });
+
+// Favorito — igual
+Jogo.hasMany(Favorito, { foreignKey: "jogoId", as: "favoritos" });
+Favorito.belongsTo(Jogo, { foreignKey: "jogoId", as: "jogo" });
+
+Midia.hasMany(Favorito, { foreignKey: "midiaId", as: "favoritos" });
+Favorito.belongsTo(Midia, { foreignKey: "midiaId", as: "midia" });
+
+Literatura.hasMany(Favorito, { foreignKey: "literaturaId", as: "favoritos" });
+Favorito.belongsTo(Literatura, {
+  foreignKey: "literaturaId",
+  as: "literatura",
+});
+
 // ── Favoritos (muitos para um)
 User.hasMany(Favorito, { foreignKey: "userId", as: "favoritos" });
 Favorito.belongsTo(User, { foreignKey: "userId", as: "user" });
 
-module.exports = { User, Genero, Publisher, Jogo, Midia, Literatura, Review, Favorito };
+module.exports = {
+  User,
+  Genero,
+  Publisher,
+  Jogo,
+  Midia,
+  Literatura,
+  Review,
+  Favorito,
+};

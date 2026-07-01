@@ -39,7 +39,7 @@ const Review = db.define(
     tableName: "reviews",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Review;

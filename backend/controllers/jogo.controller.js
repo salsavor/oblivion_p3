@@ -16,6 +16,7 @@ endpoints.getAllJogos = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Lista de jogos.", data: dados });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao listar jogos.", data: null });
@@ -35,6 +36,7 @@ endpoints.getJogoById = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Jogo encontrado.", data: dados });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao obter jogo.", data: null });
@@ -73,6 +75,7 @@ endpoints.createJogo = async (req, res) => {
       .status(201)
       .json({ status: "success", message: "Jogo criado.", data: dados });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao criar jogo.", data: null });
@@ -112,13 +115,12 @@ endpoints.updateJogo = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Jogo atualizado.", data: dados });
   } catch (error) {
-    return res
-      .status(500)
-      .json({
-        status: "error",
-        message: "Erro ao atualizar jogo.",
-        data: null,
-      });
+    console.error("[jogo] Erro:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Erro ao atualizar jogo.",
+      data: null,
+    });
   }
 };
 
@@ -136,6 +138,7 @@ endpoints.deleteJogo = async (req, res) => {
       .status(200)
       .json({ status: "success", message: "Jogo eliminado.", data: null });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res
       .status(500)
       .json({ status: "error", message: "Erro ao eliminar jogo.", data: null });
@@ -156,6 +159,7 @@ endpoints.getJogosByPublisher = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao listar jogos por publisher.",
@@ -185,6 +189,7 @@ endpoints.getJogosByGenero = async (req, res) => {
       data: dados,
     });
   } catch (error) {
+    console.error("[jogo] Erro:", error);
     return res.status(500).json({
       status: "error",
       message: "Erro ao listar jogos por género.",

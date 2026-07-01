@@ -34,7 +34,7 @@ const Jogo = db.define(
     tableName: "jogos",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Jogo;

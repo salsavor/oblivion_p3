@@ -19,7 +19,7 @@ const Genero = db.define(
     tableName: "generos",
     timestamps: true,
     freezeTableName: true,
-  }
+  },
 );
 
 module.exports = Genero;

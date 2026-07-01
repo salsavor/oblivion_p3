@@ -3,11 +3,13 @@ const router = express.Router();
 const middleware = require("../middleware");
 const reviewController = require("../controllers/review.controller");
 
-router.get("/reviews", reviewController.getAllReviews);
-router.get("/reviews/:id", reviewController.getReviewById);
+router.post("/reviews", middleware.checkToken, reviewController.createReview);
+
 // Obter reviews por tag
 router.get("/reviews/alvo/:tipo/:alvoId", reviewController.getReviewsByAlvo);
-router.post("/reviews", middleware.checkToken, reviewController.createReview);
+router.get("/reviews/:id", reviewController.getReviewById);
+router.get("/reviews", reviewController.getAllReviews);
+
 router.put(
   "/reviews/:id",
   middleware.checkToken,

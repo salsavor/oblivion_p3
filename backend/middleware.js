@@ -14,10 +14,9 @@ const checkToken = (req, res, next) => {
   if (token) {
     jwt.verify(token, config.secret, (error, decoded) => {
       if (error) {
-        return res.json({
-          success: false,
-          message: "Token é inválido",
-        });
+        return res
+          .status(403)
+          .json({ success: false, message: "Token inválido." });
       } else {
         req.decoded = decoded;
         next();

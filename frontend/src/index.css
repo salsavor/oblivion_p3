@@ -1,0 +1,37 @@
+/* Reset simples + cor de fundo aplicada logo de início (evita "flash" branco) */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #111111;
+  color: #f2f2f0;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Scrollbar discreta, alinhada com o tema escuro */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+::-webkit-scrollbar-thumb {
+  background: #2a2f2f;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d50d14;
+}

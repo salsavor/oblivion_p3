@@ -30,6 +30,7 @@ endpoints.register = async (req, res) => {
       data: userSafe,
     });
   } catch (error) {
+    console.error("[auth] Erro:", error);
     if (error.name === "SequelizeUniqueConstraintError") {
       return res.status(409).json({
         success: false,
@@ -84,6 +85,7 @@ endpoints.login = async (req, res) => {
       AccessToken: token,
     });
   } catch (error) {
+    console.error("[auth] Erro:", error);
     return res.status(500).json({
       success: false,
       message: "Erro durante a autenticação.",
@@ -120,6 +122,7 @@ endpoints.refreshToken = async (req, res) => {
       });
     });
   } catch (error) {
+    console.error("[auth] Erro:", error);
     return res
       .status(500)
       .json({ success: false, message: "Erro ao renovar token." });

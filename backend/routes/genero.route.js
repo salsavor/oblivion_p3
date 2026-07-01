@@ -3,9 +3,11 @@ const router = express.Router();
 const middleware = require("../middleware");
 const generoController = require("../controllers/genero.controller");
 
+router.post("/generos", middleware.checkToken, generoController.createGenero);
+
 router.get("/generos", generoController.getAllGeneros);
 router.get("/generos/:id", generoController.getGeneroById);
-router.post("/generos", middleware.checkToken, generoController.createGenero);
+
 router.put(
   "/generos/:id",
   middleware.checkToken,
