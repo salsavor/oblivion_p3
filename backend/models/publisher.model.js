@@ -13,6 +13,11 @@ const Publisher = db.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    tipo: {
+      type: DataTypes.ENUM("publisher", "produtora"),
+      allowNull: false,
+      defaultValue: "publisher",
+    },
     bio: {
       type: DataTypes.TEXT,
       allowNull: true,

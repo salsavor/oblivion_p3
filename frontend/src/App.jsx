@@ -43,7 +43,7 @@ export default function App() {
             sx={{ borderTop: "1px solid", borderColor: "divider", py: 3 }}
           >
             <Typography variant="body2" color="text.secondary" align="center">
-              PixelCrit — Projeto académico, Programação III (ISMT, 2025/2026)
+              Oblivion — Projeto académico, Programação III (ISMT, 2025/2026)
             </Typography>
           </Box>
         </BrowserRouter>

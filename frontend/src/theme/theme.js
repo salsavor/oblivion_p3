@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
 
-// Tema escuro do PixelCrit — paleta e tipografia num único ficheiro
+// Tema escuro do Oblivion — paleta e tipografia num único ficheiro
 // para ser fácil de ajustar mais tarde.
 const theme = createTheme({
   palette: {

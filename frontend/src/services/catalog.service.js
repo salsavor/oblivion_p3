@@ -24,6 +24,24 @@ function normalize(category, dados) {
   };
 }
 
+// Converte o formulário do painel de administração (campos genéricos) para o
+// corpo esperado por cada endpoint (nomes de campos diferentes por categoria).
+function denormalize(category, form) {
+  const base = {
+    nome: form.nome,
+    descricao: form.descricao || null,
+    imagem_url: form.imagem_url || null,
+    publisherId: form.publisherId ? Number(form.publisherId) : null,
+  };
+  if (category === "jogos") {
+    return { ...base, ano_lancamento: form.ano ? Number(form.ano) : null };
+  }
+  if (category === "media") {
+    return { ...base, ano_lancamento: form.ano ? Number(form.ano) : null, tipo: form.tipo };
+  }
+  return { ...base, ano_publicacao: form.ano ? Number(form.ano) : null, autor: form.autor || null };
+}
+
 // Junta a pontuação média das reviews a uma lista de itens já normalizados.
 export function attachScores(items, reviews, tipo) {
   const stats = {};
@@ -49,6 +67,20 @@ class CatalogService {
   async getById(category, id) {
     const res = await api.get(`/${RESOURCE[category]}/${id}`);
     return normalize(category, res.data.data);
+  }
+
+  async create(category, form) {
+    const res = await api.post(`/${RESOURCE[category]}`, denormalize(category, form));
+    return normalize(category, res.data.data);
+  }
+
+  async update(category, id, form) {
+    const res = await api.put(`/${RESOURCE[category]}/${id}`, denormalize(category, form));
+    return normalize(category, res.data.data);
+  }
+
+  async remove(category, id) {
+    await api.delete(`/${RESOURCE[category]}/${id}`);
   }
 }
 

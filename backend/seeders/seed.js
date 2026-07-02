@@ -28,26 +28,28 @@ async function seedUsers() {
 }
 
 async function seedPublishers() {
-  const nomes = [
-    "FromSoftware",
-    "CD Projekt Red",
-    "Team Cherry",
-    "Santa Monica Studio",
-    "Larian Studios",
-    "HBO",
-    "Netflix",
-    "Paramount Pictures",
+  const entradas = [
+    { nome: "FromSoftware", tipo: "publisher" },
+    { nome: "CD Projekt Red", tipo: "publisher" },
+    { nome: "Team Cherry", tipo: "publisher" },
+    { nome: "Santa Monica Studio", tipo: "publisher" },
+    { nome: "Larian Studios", tipo: "publisher" },
+    { nome: "HBO", tipo: "produtora" },
+    { nome: "Netflix", tipo: "produtora" },
+    { nome: "Paramount Pictures", tipo: "produtora" },
   ];
 
   const publishers = {};
-  for (const nome of nomes) {
+  for (const { nome, tipo } of entradas) {
     const [publisher] = await Publisher.findOrCreate({
       where: { nome },
-      defaults: { nome },
+      defaults: { nome, tipo },
     });
+    // Corrige o tipo se o publisher já existia de um seed anterior (antes do campo existir).
+    if (publisher.tipo !== tipo) await publisher.update({ tipo });
     publishers[nome] = publisher;
   }
-  console.log("Publishers prontos.");
+  console.log("Publishers e produtoras prontos.");
   return publishers;
 }
 

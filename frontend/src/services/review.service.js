@@ -25,6 +25,10 @@ class ReviewService {
     const res = await api.post("/reviews", { titulo, conteudo, pontuacao, tipo_alvo, alvo_id });
     return normalize(res.data.data);
   }
+
+  async remove(id) {
+    await api.delete(`/reviews/${id}`);
+  }
 }
 
 export default new ReviewService();

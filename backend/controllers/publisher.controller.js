@@ -4,8 +4,9 @@ const endpoints = {};
 
 // GET /publishers
 endpoints.getAllPublishers = async (req, res) => {
+  const { tipo } = req.query;
   try {
-    const dados = await Publisher.findAll();
+    const dados = await Publisher.findAll(tipo ? { where: { tipo } } : undefined);
     return res.status(200).json({
       status: "success",
       message: "Lista de publishers.",
@@ -51,13 +52,13 @@ endpoints.getPublisherById = async (req, res) => {
 
 // POST /publishers
 endpoints.createPublisher = async (req, res) => {
-  const { nome, bio } = req.body;
+  const { nome, bio, tipo } = req.body;
   if (!nome)
     return res
       .status(400)
       .json({ status: "error", message: "Nome é obrigatório.", data: null });
   try {
-    const dados = await Publisher.create({ nome, bio });
+    const dados = await Publisher.create({ nome, bio, tipo });
     return res
       .status(201)
       .json({ status: "success", message: "Publisher criado.", data: dados });
@@ -74,7 +75,7 @@ endpoints.createPublisher = async (req, res) => {
 // PUT /publishers/:id
 endpoints.updatePublisher = async (req, res) => {
   const { id } = req.params;
-  const { nome, bio } = req.body;
+  const { nome, bio, tipo } = req.body;
   try {
     const publisher = await Publisher.findByPk(id);
     if (!publisher)
@@ -83,7 +84,7 @@ endpoints.updatePublisher = async (req, res) => {
         message: "Publisher não encontrado.",
         data: null,
       });
-    await publisher.update({ nome, bio });
+    await publisher.update({ nome, bio, tipo });
     return res.status(200).json({
       status: "success",
       message: "Publisher atualizado.",
