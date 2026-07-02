@@ -1,29 +1,54 @@
-import { createContext, useContext, useState } from "react";
-
-// Contexto de autenticação MUITO simples, só para o frontend funcionar
-// de forma isolada. Quando o backend (Node + Express + JWT) estiver pronto,
-// as funções login/register abaixo devem ser substituídas por chamadas
-// axios à API (ex: POST /api/auth/login).
+import { createContext, useContext, useEffect, useState } from "react";
+import authService from "../services/auth.service";
+import { getToken, setToken } from "../services/api";
 
 const AuthContext = createContext(null);
 
+function toAppUser(dados) {
+  return {
+    id: dados.id,
+    username: dados.username,
+    name: dados.username,
+    email: dados.email,
+    numero_telefone: dados.numero_telefone,
+    role: dados.admin ? "admin" : "user",
+  };
+}
+
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null); // null = não autenticado
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Login simulado: aceita qualquer email/password.
-  // Se o email contiver "admin", o utilizador fica com o papel de admin,
-  // só para ser possível testar o AdminDashboard sem backend.
-  const login = (email, password) => {
-    const role = email.toLowerCase().includes("admin") ? "admin" : "user";
-    const name = email.split("@")[0];
-    setUser({ name, email, role });
+  // Ao carregar a app, se já existir um token guardado, tenta restaurar a sessão.
+  useEffect(() => {
+    const token = getToken();
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    authService
+      .getUserById(payload.id)
+      .then((dados) => setUser(toAppUser(dados)))
+      .catch(() => setToken(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const login = async (email, password) => {
+    const payload = await authService.login(email, password);
+    const dados = await authService.getUserById(payload.id);
+    setUser(toAppUser(dados));
   };
 
-  const register = (name, email, password) => {
-    setUser({ name, email, role: "user" });
+  const register = async (username, email, password, numero_telefone) => {
+    await authService.register(username, email, password, numero_telefone);
+    await login(email, password);
   };
 
-  const logout = () => setUser(null);
+  const logout = async () => {
+    await authService.logout();
+    setUser(null);
+  };
 
   const updateProfile = (data) => {
     setUser((prev) => ({ ...prev, ...data }));
@@ -32,6 +57,7 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     isAuthenticated: !!user,
+    loading,
     login,
     register,
     logout,

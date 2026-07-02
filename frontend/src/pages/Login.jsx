@@ -7,10 +7,11 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email.trim() || !password.trim()) {
@@ -18,10 +19,16 @@ export default function Login() {
       return;
     }
 
-    // Simulação: qualquer combinação de email/password é aceite.
-    // Usar um email com "admin" (ex: admin@pixelcrit.com) para testar o AdminDashboard.
-    login(email.trim(), password);
-    navigate("/");
+    setError("");
+    setSubmitting(true);
+    try {
+      await login(email.trim(), password);
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Não foi possível iniciar sessão.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -54,8 +61,8 @@ export default function Login() {
           sx={{ mb: 3 }}
         />
 
-        <Button type="submit" variant="contained" color="primary" fullWidth size="large">
-          Entrar
+        <Button type="submit" variant="contained" color="primary" fullWidth size="large" disabled={submitting}>
+          {submitting ? "A entrar..." : "Entrar"}
         </Button>
 
         <Box sx={{ mt: 3, textAlign: "center" }}>

@@ -32,9 +32,9 @@ export default function Navbar() {
       ? products.filter((p) => p.name.toLowerCase().includes(search.trim().toLowerCase())).slice(0, 6)
       : [];
 
-  const goToProduct = (id) => {
+  const goToProduct = (category, id) => {
     setSearch("");
-    navigate(`/product/${id}`);
+    navigate(`/product/${category}/${id}`);
   };
 
   return (
@@ -96,7 +96,7 @@ export default function Navbar() {
               }}
             >
               {results.map((r) => (
-                <MenuItem key={r.id} onClick={() => goToProduct(r.id)}>
+                <MenuItem key={r.id} onClick={() => goToProduct(r.category, r.id)}>
                   <Typography noWrap>{r.name}</Typography>
                   <Typography variant="caption" color="text.secondary" sx={{ ml: 1 }}>
                     ({r.category})

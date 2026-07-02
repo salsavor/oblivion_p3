@@ -20,7 +20,7 @@ export default function ProductCard({ item }) {
         "&:hover": { borderColor: "primary.main", transform: "translateY(-4px)" },
       }}
     >
-      <CardActionArea component={Link} to={`/product/${item.id}`} sx={{ flexGrow: 1, alignItems: "stretch" }}>
+      <CardActionArea component={Link} to={`/product/${item.category}/${item.id}`} sx={{ flexGrow: 1, alignItems: "stretch" }}>
         <Box sx={{ position: "relative" }}>
           <CardMedia component="img" image={item.image} alt={item.name} sx={{ height: 260, objectFit: "cover" }} />
 
@@ -40,7 +40,7 @@ export default function ProductCard({ item }) {
               lineHeight: 1,
             }}
           >
-            {item.score.toFixed(1)}
+            {item.score ? item.score.toFixed(1) : "—"}
           </Box>
         </Box>
 

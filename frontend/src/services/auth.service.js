@@ -1,30 +1,41 @@
-import axios from "axios";
+import api, { setToken } from "./api";
+
+// Descodifica o payload de um JWT sem o validar (a validação é feita no backend).
+function decodeToken(token) {
+  const payload = token.split(".")[1];
+  const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+  return JSON.parse(json);
+}
 
 class AuthService {
   async login(email, password) {
-    try {
-      const res = await axios.post(
-        "http://localhost:5000/api/v1/login",
-        {
-          email,
-          password,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      return res.data;
-    } catch (error) {
-      console.error("Login failed", error);
-      throw error;
-    }
+    const res = await api.post("/login", { email, password });
+    const { AccessToken } = res.data;
+    setToken(AccessToken);
+    return decodeToken(AccessToken);
+  }
+
+  async register(username, email, password, numero_telefone) {
+    const res = await api.post("/register", {
+      username,
+      email,
+      password,
+      numero_telefone,
+    });
+    return res.data.data;
+  }
+
+  async getUserById(id) {
+    const res = await api.get(`/users/${id}`);
+    return res.data.data;
   }
 
   async logout() {
-    // Se tiveres endpoint de logout, chama-o aqui
-    // await axios.post("http://localhost:5000/api/v1/logout");
+    try {
+      await api.post("/logout");
+    } finally {
+      setToken(null);
+    }
   }
 }
 

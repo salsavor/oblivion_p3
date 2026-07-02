@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Box,
@@ -11,8 +11,10 @@ import {
   Avatar,
   Paper,
   Alert,
+  CircularProgress,
 } from "@mui/material";
-import { products, reviewsByProduct } from "../data/mockData";
+import catalogService, { TIPO_ALVO } from "../services/catalog.service";
+import reviewService from "../services/review.service";
 import { useAuth } from "../contexts/AuthContext";
 
 const categoryLabel = {
@@ -22,18 +24,46 @@ const categoryLabel = {
 };
 
 export default function ProductDetail() {
-  const { id } = useParams();
-  const { isAuthenticated, user } = useAuth();
+  const { category, id } = useParams();
+  const { isAuthenticated } = useAuth();
 
-  const item = products.find((p) => p.id === Number(id));
+  const [item, setItem] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  // Reviews mock guardadas apenas em memória (recomeçam ao dar refresh).
-  const [reviews, setReviews] = useState(reviewsByProduct[Number(id)] || []);
+  const [titulo, setTitulo] = useState("");
   const [newScore, setNewScore] = useState(8);
   const [newComment, setNewComment] = useState("");
   const [sent, setSent] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
 
-  if (!item) {
+  const tipo = TIPO_ALVO[category];
+
+  const loadReviews = () => reviewService.getByAlvo(tipo, id).then(setReviews);
+
+  useEffect(() => {
+    setLoading(true);
+    setNotFound(false);
+    Promise.all([catalogService.getById(category, id), reviewService.getByAlvo(tipo, id)])
+      .then(([itemData, reviewsData]) => {
+        setItem(itemData);
+        setReviews(reviewsData);
+      })
+      .catch(() => setNotFound(true))
+      .finally(() => setLoading(false));
+  }, [category, id, tipo]);
+
+  if (loading) {
+    return (
+      <Container sx={{ py: 8, textAlign: "center" }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
+  if (notFound || !item) {
     return (
       <Container maxWidth="sm" sx={{ py: 8, textAlign: "center" }}>
         <Typography variant="h5" gutterBottom>
@@ -46,16 +76,33 @@ export default function ProductDetail() {
     );
   }
 
-  const handleSubmitReview = (e) => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
+  const score = reviews.length
+    ? reviews.reduce((sum, r) => sum + r.score, 0) / reviews.length
+    : 0;
 
-    setReviews((prev) => [
-      ...prev,
-      { id: Date.now(), author: user.name, score: newScore, comment: newComment.trim() },
-    ]);
-    setNewComment("");
-    setSent(true);
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!titulo.trim() || !newComment.trim()) return;
+
+    setFormError("");
+    setSubmitting(true);
+    try {
+      await reviewService.create({
+        titulo: titulo.trim(),
+        conteudo: newComment.trim(),
+        pontuacao: newScore,
+        tipo_alvo: tipo,
+        alvo_id: Number(id),
+      });
+      await loadReviews();
+      setTitulo("");
+      setNewComment("");
+      setSent(true);
+    } catch (err) {
+      setFormError(err.response?.data?.message || "Não foi possível publicar a review.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -75,7 +122,7 @@ export default function ProductDetail() {
             {item.name}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-            {item.author} · {item.year}
+            {item.author || "—"} · {item.year || "—"}
           </Typography>
 
           <Box
@@ -92,7 +139,7 @@ export default function ProductDetail() {
             }}
           >
             <Typography variant="h6" component="span" sx={{ fontWeight: 700 }}>
-              {item.score.toFixed(1)}
+              {score.toFixed(1)}
             </Typography>
             <Typography variant="caption">/ 10</Typography>
           </Box>
@@ -122,6 +169,11 @@ export default function ProductDetail() {
                 <Typography sx={{ fontWeight: 700 }}>{r.author}</Typography>
                 <Rating value={r.score / 2} precision={0.5} readOnly size="small" />
               </Box>
+              {r.titulo && (
+                <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+                  {r.titulo}
+                </Typography>
+              )}
               <Typography variant="body2" color="text.secondary">
                 {r.comment}
               </Typography>
@@ -139,9 +191,22 @@ export default function ProductDetail() {
 
           {sent && (
             <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSent(false)}>
-              Review publicada (simulação em frontend).
+              Review publicada com sucesso.
             </Alert>
           )}
+          {formError && (
+            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setFormError("")}>
+              {formError}
+            </Alert>
+          )}
+
+          <TextField
+            label="Título"
+            fullWidth
+            value={titulo}
+            onChange={(e) => setTitulo(e.target.value)}
+            sx={{ mb: 2 }}
+          />
 
           <Typography variant="body2" sx={{ mb: 0.5 }}>
             Nota
@@ -149,7 +214,7 @@ export default function ProductDetail() {
           <Rating
             value={newScore / 2}
             precision={0.5}
-            onChange={(e, value) => setNewScore((value || 0) * 2)}
+            onChange={(e, value) => setNewScore(Math.round((value || 0) * 2))}
             sx={{ mb: 2 }}
           />
 
@@ -163,8 +228,8 @@ export default function ProductDetail() {
             sx={{ mb: 2 }}
           />
 
-          <Button type="submit" variant="contained" color="primary">
-            Publicar review
+          <Button type="submit" variant="contained" color="primary" disabled={submitting}>
+            {submitting ? "A publicar..." : "Publicar review"}
           </Button>
         </Paper>
       ) : (

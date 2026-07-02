@@ -1,12 +1,35 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Container, Typography, Button } from "@mui/material";
+import { Box, Container, Typography, Button, CircularProgress, Alert } from "@mui/material";
 import ProductCard from "../components/ProductCard";
-import { products, categories } from "../data/mockData";
-
-// Top 6 itens com melhor nota, de todas as categorias, para a secção de destaques.
-const highlights = [...products].sort((a, b) => b.score - a.score).slice(0, 6);
+import { categories } from "../data/mockData";
+import catalogService, { attachScores } from "../services/catalog.service";
+import reviewService from "../services/review.service";
 
 export default function Home() {
+  const [highlights, setHighlights] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    Promise.all([
+      catalogService.getAll("jogos"),
+      catalogService.getAll("media"),
+      catalogService.getAll("literatura"),
+      reviewService.getAll(),
+    ])
+      .then(([jogos, media, literatura, reviews]) => {
+        const all = [
+          ...attachScores(jogos, reviews, "jogo"),
+          ...attachScores(media, reviews, "midia"),
+          ...attachScores(literatura, reviews, "literatura"),
+        ];
+        setHighlights([...all].sort((a, b) => b.score - a.score).slice(0, 6));
+      })
+      .catch(() => setError("Não foi possível carregar os destaques."))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <Box>
       {/* Hero */}
@@ -39,17 +62,22 @@ export default function Home() {
           <Typography variant="h4">Destaques</Typography>
         </Box>
 
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", lg: "repeat(4, 1fr)" },
-            gap: 3,
-          }}
-        >
-          {highlights.map((item) => (
-            <ProductCard key={item.id} item={item} />
-          ))}
-        </Box>
+        {loading && <CircularProgress />}
+        {error && <Alert severity="error">{error}</Alert>}
+
+        {!loading && !error && (
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", lg: "repeat(4, 1fr)" },
+              gap: 3,
+            }}
+          >
+            {highlights.map((item) => (
+              <ProductCard key={`${item.category}-${item.id}`} item={item} />
+            ))}
+          </Box>
+        )}
       </Container>
     </Box>
   );

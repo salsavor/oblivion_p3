@@ -9,10 +9,11 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name.trim() || !email.trim() || !password.trim()) {
@@ -24,9 +25,16 @@ export default function Register() {
       return;
     }
 
-    // Simulação de registo em frontend — substituir por POST /api/auth/register.
-    register(name.trim(), email.trim(), password);
-    navigate("/");
+    setError("");
+    setSubmitting(true);
+    try {
+      await register(name.trim(), email.trim(), password);
+      navigate("/");
+    } catch (err) {
+      setError(err.response?.data?.message || "Não foi possível criar a conta.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -42,7 +50,13 @@ export default function Register() {
           </Alert>
         )}
 
-        <TextField label="Nome" fullWidth value={name} onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
+        <TextField
+          label="Nome de utilizador"
+          fullWidth
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
         <TextField
           label="Email"
           type="email"
@@ -68,8 +82,8 @@ export default function Register() {
           sx={{ mb: 3 }}
         />
 
-        <Button type="submit" variant="contained" color="primary" fullWidth size="large">
-          Registar
+        <Button type="submit" variant="contained" color="primary" fullWidth size="large" disabled={submitting}>
+          {submitting ? "A criar conta..." : "Registar"}
         </Button>
 
         <Box sx={{ mt: 3, textAlign: "center" }}>

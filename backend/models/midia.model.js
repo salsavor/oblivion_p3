@@ -12,7 +12,7 @@ const Midia = db.define(
     nome: {
       type: DataTypes.STRING(150),
       allowNull: false,
-    },W
+    },
     tipo: {
       type: DataTypes.ENUM("Filme", "Serie", "Anime", "Documentario"),
       allowNull: false,
