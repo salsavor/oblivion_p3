@@ -10,6 +10,7 @@ export default function Home() {
   const [highlights, setHighlights] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
     Promise.all([
@@ -30,11 +31,59 @@ export default function Home() {
       .finally(() => setLoading(false));
   }, []);
 
+  // As 4 imagens do carrossel do hero são as capas dos itens com melhor nota.
+  const carouselImages = highlights.slice(0, 4).map((item) => item.image);
+
+  useEffect(() => {
+    if (carouselImages.length < 2) return;
+    const id = setInterval(() => {
+      setCarouselIndex((i) => (i + 1) % carouselImages.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [carouselImages.length]);
+
   return (
     <Box>
       {/* Hero */}
-      <Box sx={{ bgcolor: "background.paper", borderBottom: "1px solid", borderColor: "divider" }}>
-        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 } }}>
+      <Box
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+          bgcolor: "background.paper",
+          borderBottom: "1px solid",
+          borderColor: "divider",
+        }}
+      >
+        {/* Carrossel de fundo */}
+        <Box sx={{ position: "absolute", inset: 0 }}>
+          {carouselImages.map((src, i) => (
+            <Box
+              key={src}
+              component="img"
+              src={src}
+              alt=""
+              sx={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: i === carouselIndex ? 1 : 0,
+                transition: "opacity 1.2s ease",
+              }}
+            />
+          ))}
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "linear-gradient(90deg, rgba(17,17,17,0.95) 0%, rgba(17,17,17,0.8) 40%, rgba(17,17,17,0.55) 100%)",
+            }}
+          />
+        </Box>
+
+        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 }, position: "relative" }}>
           <Typography
             variant="h2"
             sx={{ maxWidth: 700, mb: 2, fontSize: { xs: "2.4rem", md: "3.4rem" } }}
@@ -45,13 +94,37 @@ export default function Home() {
             Jogos, séries, filmes e livros ligados ao mundo dos videojogos, avaliados e comentados
             pela comunidade.
           </Typography>
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
+          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: carouselImages.length > 1 ? 4 : 0 }}>
             {categories.map((c) => (
               <Button key={c.slug} component={Link} to={`/${c.slug}`} variant="outlined" color="primary">
                 {c.label}
               </Button>
             ))}
           </Box>
+
+          {/* Indicadores do carrossel */}
+          {carouselImages.length > 1 && (
+            <Box sx={{ display: "flex", gap: 1 }}>
+              {carouselImages.map((src, i) => (
+                <Box
+                  key={src}
+                  component="button"
+                  onClick={() => setCarouselIndex(i)}
+                  aria-label={`Imagem ${i + 1}`}
+                  sx={{
+                    width: 28,
+                    height: 4,
+                    border: "none",
+                    borderRadius: 2,
+                    cursor: "pointer",
+                    bgcolor: i === carouselIndex ? "primary.main" : "rgba(255,255,255,0.3)",
+                    transition: "background-color 0.3s ease",
+                    p: 0,
+                  }}
+                />
+              ))}
+            </Box>
+          )}
         </Container>
       </Box>
 
