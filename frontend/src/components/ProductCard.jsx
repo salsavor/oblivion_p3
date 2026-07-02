@@ -1,5 +1,13 @@
 import { Link } from "react-router-dom";
-import { Card, CardActionArea, CardMedia, CardContent, Box, Typography, Chip } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Box,
+  Typography,
+  Chip,
+} from "@mui/material";
 
 const categoryLabel = {
   jogos: "Jogo",
@@ -17,12 +25,24 @@ export default function ProductCard({ item }) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        "&:hover": { borderColor: "primary.main", transform: "translateY(-4px)" },
+        "&:hover": {
+          borderColor: "primary.main",
+          transform: "translateY(-4px)",
+        },
       }}
     >
-      <CardActionArea component={Link} to={`/product/${item.category}/${item.id}`} sx={{ flexGrow: 1, alignItems: "stretch" }}>
+      <CardActionArea
+        component={Link}
+        to={`/product/${item.category}/${item.id}`}
+        sx={{ flexGrow: 1, alignItems: "stretch" }}
+      >
         <Box sx={{ position: "relative" }}>
-          <CardMedia component="img" image={item.image} alt={item.name} sx={{ height: 260, objectFit: "cover" }} />
+          <CardMedia
+            component="img"
+            image={item.image}
+            alt={item.name}
+            sx={{ height: 260, objectFit: "cover" }}
+          />
 
           {/* Selo com a nota, no canto superior direito da capa */}
           <Box
@@ -45,7 +65,13 @@ export default function ProductCard({ item }) {
         </Box>
 
         <CardContent>
-          <Chip label={categoryLabel[item.category]} size="small" variant="outlined" color="primary" sx={{ mb: 1 }} />
+          <Chip
+            label={categoryLabel[item.category]}
+            size="small"
+            variant="outlined"
+            color="primary"
+            sx={{ mb: 1 }}
+          />
           <Typography variant="h6" component="h3" noWrap>
             {item.name}
           </Typography>

@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Paper, Typography, TextField, Button, Alert, Box } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Box,
+} from "@mui/material";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Register() {
@@ -31,7 +39,9 @@ export default function Register() {
       await register(name.trim(), email.trim(), password);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Não foi possível criar a conta.");
+      setError(
+        err.response?.data?.message || "Não foi possível criar a conta.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -82,14 +92,27 @@ export default function Register() {
           sx={{ mb: 3 }}
         />
 
-        <Button type="submit" variant="contained" color="primary" fullWidth size="large" disabled={submitting}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          size="large"
+          disabled={submitting}
+        >
           {submitting ? "A criar conta..." : "Registar"}
         </Button>
 
         <Box sx={{ mt: 3, textAlign: "center" }}>
           <Typography variant="body2" color="text.secondary">
             Já tem conta?{" "}
-            <Typography component={Link} to="/login" variant="body2" color="primary" sx={{ fontWeight: 700 }}>
+            <Typography
+              component={Link}
+              to="/login"
+              variant="body2"
+              color="primary"
+              sx={{ fontWeight: 700 }}
+            >
               Entrar
             </Typography>
           </Typography>

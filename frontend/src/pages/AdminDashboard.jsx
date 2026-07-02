@@ -26,7 +26,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { categories } from "../data/mockData";
 import { useAuth } from "../contexts/AuthContext";
-import catalogService, { attachScores, TIPO_ALVO } from "../services/catalog.service";
+import catalogService, {
+  attachScores,
+  TIPO_ALVO,
+} from "../services/catalog.service";
 import reviewService from "../services/review.service";
 import publisherService from "../services/publisher.service";
 
@@ -61,7 +64,10 @@ export default function AdminDashboard() {
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState("");
 
-  const [publishersByTipo, setPublishersByTipo] = useState({ publisher: [], produtora: [] });
+  const [publishersByTipo, setPublishersByTipo] = useState({
+    publisher: [],
+    produtora: [],
+  });
   const [newPublisherName, setNewPublisherName] = useState("");
   const [creatingPublisher, setCreatingPublisher] = useState(false);
 
@@ -88,8 +94,13 @@ export default function AdminDashboard() {
   };
 
   const loadPublishers = () => {
-    Promise.all([publisherService.getAll("publisher"), publisherService.getAll("produtora")])
-      .then(([publisher, produtora]) => setPublishersByTipo({ publisher, produtora }))
+    Promise.all([
+      publisherService.getAll("publisher"),
+      publisherService.getAll("produtora"),
+    ])
+      .then(([publisher, produtora]) =>
+        setPublishersByTipo({ publisher, produtora }),
+      )
       .catch(() => setPublishersByTipo({ publisher: [], produtora: [] }));
   };
 
@@ -142,12 +153,20 @@ export default function AdminDashboard() {
     const { tipo } = PUBLISHER_CONFIG[form.category];
     setCreatingPublisher(true);
     try {
-      const publisher = await publisherService.create(newPublisherName.trim(), tipo);
-      setPublishersByTipo((prev) => ({ ...prev, [tipo]: [...prev[tipo], publisher] }));
+      const publisher = await publisherService.create(
+        newPublisherName.trim(),
+        tipo,
+      );
+      setPublishersByTipo((prev) => ({
+        ...prev,
+        [tipo]: [...prev[tipo], publisher],
+      }));
       setForm((prev) => ({ ...prev, publisherId: String(publisher.id) }));
       setNewPublisherName("");
     } catch (err) {
-      setFormError(err.response?.data?.message || "Não foi possível criar o registo.");
+      setFormError(
+        err.response?.data?.message || "Não foi possível criar o registo.",
+      );
     } finally {
       setCreatingPublisher(false);
     }
@@ -157,9 +176,13 @@ export default function AdminDashboard() {
     if (!window.confirm(`Eliminar "${item.name}"?`)) return;
     try {
       await catalogService.remove(item.category, item.id);
-      setItems((prev) => prev.filter((p) => !(p.category === item.category && p.id === item.id)));
+      setItems((prev) =>
+        prev.filter((p) => !(p.category === item.category && p.id === item.id)),
+      );
     } catch (err) {
-      setError(err.response?.data?.message || "Não foi possível eliminar o item.");
+      setError(
+        err.response?.data?.message || "Não foi possível eliminar o item.",
+      );
     }
   };
 
@@ -177,7 +200,9 @@ export default function AdminDashboard() {
       setDialogOpen(false);
       await loadItems();
     } catch (err) {
-      setFormError(err.response?.data?.message || "Não foi possível guardar o item.");
+      setFormError(
+        err.response?.data?.message || "Não foi possível guardar o item.",
+      );
     } finally {
       setSaving(false);
     }
@@ -185,17 +210,35 @@ export default function AdminDashboard() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4, flexWrap: "wrap", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 4,
+          flexWrap: "wrap",
+          gap: 2,
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box sx={{ width: 4, height: 26, bgcolor: "primary.main" }} />
           <Typography variant="h4">Painel de Administração</Typography>
         </Box>
-        <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={openNew}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={openNew}
+        >
           Novo item
         </Button>
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
       {loading && <CircularProgress />}
 
       {!loading && (
@@ -214,8 +257,12 @@ export default function AdminDashboard() {
               {items.map((item) => (
                 <TableRow key={`${item.category}-${item.id}`} hover>
                   <TableCell>{item.name}</TableCell>
-                  <TableCell sx={{ textTransform: "capitalize" }}>{item.category}</TableCell>
-                  <TableCell>{item.score ? item.score.toFixed(1) : "—"}</TableCell>
+                  <TableCell sx={{ textTransform: "capitalize" }}>
+                    {item.category}
+                  </TableCell>
+                  <TableCell>
+                    {item.score ? item.score.toFixed(1) : "—"}
+                  </TableCell>
                   <TableCell>{item.year ?? "—"}</TableCell>
                   <TableCell align="right">
                     <IconButton size="small" onClick={() => openEdit(item)}>
@@ -233,9 +280,16 @@ export default function AdminDashboard() {
       )}
 
       {/* Dialog usado tanto para criar como para editar */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="xs">
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        fullWidth
+        maxWidth="xs"
+      >
         <DialogTitle>{form.id ? "Editar item" : "Novo item"}</DialogTitle>
-        <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
+        <DialogContent
+          sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}
+        >
           {formError && <Alert severity="error">{formError}</Alert>}
 
           <TextField
@@ -288,14 +342,18 @@ export default function AdminDashboard() {
                 select
                 label={PUBLISHER_CONFIG[form.category].label}
                 value={form.publisherId}
-                onChange={(e) => setForm({ ...form, publisherId: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, publisherId: e.target.value })
+                }
               >
                 <MenuItem value="">— Nenhum —</MenuItem>
-                {publishersByTipo[PUBLISHER_CONFIG[form.category].tipo].map((p) => (
-                  <MenuItem key={p.id} value={String(p.id)}>
-                    {p.nome}
-                  </MenuItem>
-                ))}
+                {publishersByTipo[PUBLISHER_CONFIG[form.category].tipo].map(
+                  (p) => (
+                    <MenuItem key={p.id} value={String(p.id)}>
+                      {p.nome}
+                    </MenuItem>
+                  ),
+                )}
               </TextField>
 
               <Box sx={{ display: "flex", gap: 1 }}>
@@ -340,7 +398,12 @@ export default function AdminDashboard() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)}>Cancelar</Button>
-          <Button variant="contained" color="primary" onClick={handleSave} disabled={saving}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSave}
+            disabled={saving}
+          >
             {saving ? "A guardar..." : "Guardar"}
           </Button>
         </DialogActions>

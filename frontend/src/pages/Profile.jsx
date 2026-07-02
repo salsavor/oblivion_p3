@@ -19,8 +19,16 @@ import { useAuth } from "../contexts/AuthContext";
 import catalogService from "../services/catalog.service";
 import reviewService from "../services/review.service";
 
-const CATEGORY_BY_TIPO = { jogo: "jogos", midia: "media", literatura: "literatura" };
-const categoryLabel = { jogos: "Jogo", media: "Média", literatura: "Literatura" };
+const CATEGORY_BY_TIPO = {
+  jogo: "jogos",
+  midia: "media",
+  literatura: "literatura",
+};
+const categoryLabel = {
+  jogos: "Jogo",
+  media: "Média",
+  literatura: "Literatura",
+};
 
 export default function Profile() {
   const { user, isAuthenticated, updateProfile } = useAuth();
@@ -48,7 +56,9 @@ export default function Profile() {
           .filter((r) => r.userId === user.id)
           .map((r) => {
             const category = CATEGORY_BY_TIPO[r.tipo_alvo];
-            const item = items.find((i) => i.category === category && i.id === r.alvo_id);
+            const item = items.find(
+              (i) => i.category === category && i.id === r.alvo_id,
+            );
             return {
               id: r.id,
               titulo: r.titulo,
@@ -61,7 +71,9 @@ export default function Profile() {
           });
         setReviews(mine);
       })
-      .catch(() => setReviewsError("Não foi possível carregar as suas reviews."))
+      .catch(() =>
+        setReviewsError("Não foi possível carregar as suas reviews."),
+      )
       .finally(() => setLoadingReviews(false));
   };
 
@@ -76,7 +88,12 @@ export default function Profile() {
         <Alert severity="info" sx={{ mb: 3 }}>
           Precisa de iniciar sessão para ver o seu perfil.
         </Alert>
-        <Button component={Link} to="/login" variant="contained" color="primary">
+        <Button
+          component={Link}
+          to="/login"
+          variant="contained"
+          color="primary"
+        >
           Iniciar sessão
         </Button>
       </Container>
@@ -95,14 +112,18 @@ export default function Profile() {
       await reviewService.remove(id);
       setReviews((prev) => prev.filter((r) => r.id !== id));
     } catch (err) {
-      setReviewsError(err.response?.data?.message || "Não foi possível eliminar a review.");
+      setReviewsError(
+        err.response?.data?.message || "Não foi possível eliminar a review.",
+      );
     }
   };
 
   return (
     <Container maxWidth="sm" sx={{ py: 6 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 4 }}>
-        <Avatar sx={{ width: 64, height: 64, bgcolor: "primary.main", fontSize: 26 }}>
+        <Avatar
+          sx={{ width: 64, height: 64, bgcolor: "primary.main", fontSize: 26 }}
+        >
           {user.name.charAt(0).toUpperCase()}
         </Avatar>
         <Box>
@@ -123,12 +144,22 @@ export default function Profile() {
         </Typography>
 
         {saved && (
-          <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSaved(false)}>
+          <Alert
+            severity="success"
+            sx={{ mb: 2 }}
+            onClose={() => setSaved(false)}
+          >
             Alterações guardadas.
           </Alert>
         )}
 
-        <TextField label="Nome" fullWidth value={name} onChange={(e) => setName(e.target.value)} sx={{ mb: 2 }} />
+        <TextField
+          label="Nome"
+          fullWidth
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
         <TextField
           label="Email"
           type="email"
@@ -152,24 +183,49 @@ export default function Profile() {
 
       {!loadingReviews && !reviewsError && reviews.length === 0 && (
         <Typography variant="body2" color="text.secondary">
-          Ainda não fez nenhuma review. Explore os catálogos de Jogos, Média e Literatura e partilhe a sua opinião.
+          Ainda não fez nenhuma review. Explore os catálogos de Jogos, Média e
+          Literatura e partilhe a sua opinião.
         </Typography>
       )}
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {reviews.map((r) => (
           <Paper key={r.id} sx={{ p: 2 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "flex-start",
+                gap: 1,
+              }}
+            >
               <Box>
-                <Chip label={categoryLabel[r.category]} size="small" variant="outlined" color="primary" sx={{ mb: 0.5 }} />
+                <Chip
+                  label={categoryLabel[r.category]}
+                  size="small"
+                  variant="outlined"
+                  color="primary"
+                  sx={{ mb: 0.5 }}
+                />
                 <Typography
                   component={Link}
                   to={`/product/${r.category}/${r.itemId}`}
-                  sx={{ display: "block", fontWeight: 700, color: "text.primary", textDecoration: "none" }}
+                  sx={{
+                    display: "block",
+                    fontWeight: 700,
+                    color: "text.primary",
+                    textDecoration: "none",
+                  }}
                 >
                   {r.itemName}
                 </Typography>
-                <Rating value={r.score / 2} precision={0.5} readOnly size="small" sx={{ my: 0.5 }} />
+                <Rating
+                  value={r.score / 2}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                  sx={{ my: 0.5 }}
+                />
                 {r.titulo && (
                   <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
                     {r.titulo}

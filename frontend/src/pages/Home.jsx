@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Box, Container, Typography, Button, CircularProgress, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  Button,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import { categories } from "../data/mockData";
 import catalogService, { attachScores } from "../services/catalog.service";
@@ -83,20 +90,44 @@ export default function Home() {
           />
         </Box>
 
-        <Container maxWidth="lg" sx={{ py: { xs: 6, md: 10 }, position: "relative" }}>
+        <Container
+          maxWidth="lg"
+          sx={{ py: { xs: 6, md: 10 }, position: "relative" }}
+        >
           <Typography
             variant="h2"
-            sx={{ maxWidth: 700, mb: 2, fontSize: { xs: "2.4rem", md: "3.4rem" } }}
+            sx={{
+              maxWidth: 700,
+              mb: 2,
+              fontSize: { xs: "2.4rem", md: "3.4rem" },
+            }}
           >
             Críticas honestas do universo gamer
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 560, mb: 4 }}>
-            Jogos, séries, filmes e livros ligados ao mundo dos videojogos, avaliados e comentados
-            pela comunidade.
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ maxWidth: 560, mb: 4 }}
+          >
+            Jogos, séries, filmes e livros ligados ao mundo dos videojogos,
+            avaliados e comentados pela comunidade.
           </Typography>
-          <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", mb: carouselImages.length > 1 ? 4 : 0 }}>
+          <Box
+            sx={{
+              display: "flex",
+              gap: 2,
+              flexWrap: "wrap",
+              mb: carouselImages.length > 1 ? 4 : 0,
+            }}
+          >
             {categories.map((c) => (
-              <Button key={c.slug} component={Link} to={`/${c.slug}`} variant="outlined" color="primary">
+              <Button
+                key={c.slug}
+                component={Link}
+                to={`/${c.slug}`}
+                variant="outlined"
+                color="primary"
+              >
                 {c.label}
               </Button>
             ))}
@@ -117,7 +148,10 @@ export default function Home() {
                     border: "none",
                     borderRadius: 2,
                     cursor: "pointer",
-                    bgcolor: i === carouselIndex ? "primary.main" : "rgba(255,255,255,0.3)",
+                    bgcolor:
+                      i === carouselIndex
+                        ? "primary.main"
+                        : "rgba(255,255,255,0.3)",
                     transition: "background-color 0.3s ease",
                     p: 0,
                   }}
@@ -142,7 +176,12 @@ export default function Home() {
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", lg: "repeat(4, 1fr)" },
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "1fr 1fr",
+                md: "1fr 1fr 1fr",
+                lg: "repeat(4, 1fr)",
+              },
               gap: 3,
             }}
           >

@@ -29,7 +29,10 @@ export default function App() {
               <Route path="/jogos" element={<JogosHome />} />
               <Route path="/media" element={<MediaHome />} />
               <Route path="/literatura" element={<LiteratureHome />} />
-              <Route path="/product/:category/:id" element={<ProductDetail />} />
+              <Route
+                path="/product/:category/:id"
+                element={<ProductDetail />}
+              />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />

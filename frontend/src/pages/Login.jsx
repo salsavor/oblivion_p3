@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container, Paper, Typography, TextField, Button, Alert, Box } from "@mui/material";
+import {
+  Container,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  Alert,
+  Box,
+} from "@mui/material";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Login() {
@@ -25,7 +33,9 @@ export default function Login() {
       await login(email.trim(), password);
       navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "Não foi possível iniciar sessão.");
+      setError(
+        err.response?.data?.message || "Não foi possível iniciar sessão.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -61,14 +71,27 @@ export default function Login() {
           sx={{ mb: 3 }}
         />
 
-        <Button type="submit" variant="contained" color="primary" fullWidth size="large" disabled={submitting}>
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          size="large"
+          disabled={submitting}
+        >
           {submitting ? "A entrar..." : "Entrar"}
         </Button>
 
         <Box sx={{ mt: 3, textAlign: "center" }}>
           <Typography variant="body2" color="text.secondary">
             Não tem conta?{" "}
-            <Typography component={Link} to="/register" variant="body2" color="primary" sx={{ fontWeight: 700 }}>
+            <Typography
+              component={Link}
+              to="/register"
+              variant="body2"
+              color="primary"
+              sx={{ fontWeight: 700 }}
+            >
               Registar
             </Typography>
           </Typography>

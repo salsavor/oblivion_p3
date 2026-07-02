@@ -22,7 +22,13 @@ class ReviewService {
   }
 
   async create({ titulo, conteudo, pontuacao, tipo_alvo, alvo_id }) {
-    const res = await api.post("/reviews", { titulo, conteudo, pontuacao, tipo_alvo, alvo_id });
+    const res = await api.post("/reviews", {
+      titulo,
+      conteudo,
+      pontuacao,
+      tipo_alvo,
+      alvo_id,
+    });
     return normalize(res.data.data);
   }
 

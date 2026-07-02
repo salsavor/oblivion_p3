@@ -6,7 +6,7 @@
 
 const cover = (text) =>
   `https://placehold.co/500x700/1a1e1e/d50d14?font=roboto&text=${encodeURIComponent(
-    text
+    text,
   )}`;
 
 export const products = [
@@ -218,21 +218,61 @@ export const products = [
 // Reviews de exemplo, indexadas por id do produto.
 export const reviewsByProduct = {
   1: [
-    { id: 1, author: "Marta S.", score: 10, comment: "O melhor mundo aberto que já explorei. Cada canto tem algo por descobrir." },
-    { id: 2, author: "Tiago R.", score: 9, comment: "Exigente mas justo. Os chefes são memoráveis." },
+    {
+      id: 1,
+      author: "Marta S.",
+      score: 10,
+      comment:
+        "O melhor mundo aberto que já explorei. Cada canto tem algo por descobrir.",
+    },
+    {
+      id: 2,
+      author: "Tiago R.",
+      score: 9,
+      comment: "Exigente mas justo. Os chefes são memoráveis.",
+    },
   ],
   2: [
-    { id: 3, author: "Ines F.", score: 10, comment: "As missões secundárias contam histórias melhores que muitos jogos inteiros." },
+    {
+      id: 3,
+      author: "Ines F.",
+      score: 10,
+      comment:
+        "As missões secundárias contam histórias melhores que muitos jogos inteiros.",
+    },
   ],
   5: [
-    { id: 4, author: "Pedro A.", score: 10, comment: "A liberdade de escolha é impressionante, quase tudo tem consequências." },
-    { id: 5, author: "Sofia M.", score: 9, comment: "Longo, mas nunca cansativo. Companheiros muito bem escritos." },
+    {
+      id: 4,
+      author: "Pedro A.",
+      score: 10,
+      comment:
+        "A liberdade de escolha é impressionante, quase tudo tem consequências.",
+    },
+    {
+      id: 5,
+      author: "Sofia M.",
+      score: 9,
+      comment: "Longo, mas nunca cansativo. Companheiros muito bem escritos.",
+    },
   ],
   7: [
-    { id: 6, author: "Rui C.", score: 9, comment: "Fiel ao jogo e ao mesmo tempo capaz de surpreender quem já o conhece." },
+    {
+      id: 6,
+      author: "Rui C.",
+      score: 9,
+      comment:
+        "Fiel ao jogo e ao mesmo tempo capaz de surpreender quem já o conhece.",
+    },
   ],
   14: [
-    { id: 7, author: "Beatriz L.", score: 8, comment: "Nostálgico para quem cresceu com cultura gamer dos anos 80 e 90." },
+    {
+      id: 7,
+      author: "Beatriz L.",
+      score: 8,
+      comment:
+        "Nostálgico para quem cresceu com cultura gamer dos anos 80 e 90.",
+    },
   ],
 };
 

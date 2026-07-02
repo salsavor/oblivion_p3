@@ -2,7 +2,9 @@ import api from "./api";
 
 class PublisherService {
   async getAll(tipo) {
-    const res = await api.get("/publishers", { params: tipo ? { tipo } : undefined });
+    const res = await api.get("/publishers", {
+      params: tipo ? { tipo } : undefined,
+    });
     return res.data.data;
   }
 

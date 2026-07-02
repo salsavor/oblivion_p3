@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import { Box, Container, Typography, CircularProgress, Alert } from "@mui/material";
+import {
+  Box,
+  Container,
+  Typography,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
 import ProductCard from "../components/ProductCard";
 import catalogService, { attachScores } from "../services/catalog.service";
 import reviewService from "../services/review.service";
@@ -11,7 +17,9 @@ export default function JogosHome() {
 
   useEffect(() => {
     Promise.all([catalogService.getAll("jogos"), reviewService.getAll()])
-      .then(([jogos, reviews]) => setItems(attachScores(jogos, reviews, "jogo")))
+      .then(([jogos, reviews]) =>
+        setItems(attachScores(jogos, reviews, "jogo")),
+      )
       .catch(() => setError("Não foi possível carregar os jogos."))
       .finally(() => setLoading(false));
   }, []);
@@ -33,7 +41,12 @@ export default function JogosHome() {
         <Box
           sx={{
             display: "grid",
-            gridTemplateColumns: { xs: "1fr", sm: "1fr 1fr", md: "1fr 1fr 1fr", lg: "repeat(4, 1fr)" },
+            gridTemplateColumns: {
+              xs: "1fr",
+              sm: "1fr 1fr",
+              md: "1fr 1fr 1fr",
+              lg: "repeat(4, 1fr)",
+            },
             gap: 3,
           }}
         >

@@ -27,7 +27,7 @@ const PageNotFound = () => {
         >
           Ups! Erro 404
         </Typography>
-        <Typography variant="h5" sx={{ mb: 2, color: "#000"  }}>
+        <Typography variant="h5" sx={{ mb: 2, color: "#000" }}>
           Página não encontrada
         </Typography>
         <Typography color="text.secondary" sx={{ mb: 4 }}>

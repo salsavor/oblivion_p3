@@ -46,7 +46,10 @@ export default function ProductDetail() {
   useEffect(() => {
     setLoading(true);
     setNotFound(false);
-    Promise.all([catalogService.getById(category, id), reviewService.getByAlvo(tipo, id)])
+    Promise.all([
+      catalogService.getById(category, id),
+      reviewService.getByAlvo(tipo, id),
+    ])
       .then(([itemData, reviewsData]) => {
         setItem(itemData);
         setReviews(reviewsData);
@@ -69,7 +72,13 @@ export default function ProductDetail() {
         <Typography variant="h5" gutterBottom>
           Produto não encontrado
         </Typography>
-        <Button component={Link} to="/" variant="outlined" color="primary" sx={{ mt: 2 }}>
+        <Button
+          component={Link}
+          to="/"
+          variant="outlined"
+          color="primary"
+          sx={{ mt: 2 }}
+        >
           Voltar à Home
         </Button>
       </Container>
@@ -99,7 +108,9 @@ export default function ProductDetail() {
       setNewComment("");
       setSent(true);
     } catch (err) {
-      setFormError(err.response?.data?.message || "Não foi possível publicar a review.");
+      setFormError(
+        err.response?.data?.message || "Não foi possível publicar a review.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -108,16 +119,33 @@ export default function ProductDetail() {
   return (
     <Container maxWidth="lg" sx={{ py: 6 }}>
       {/* Cabeçalho do produto */}
-      <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 4, mb: 6 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          gap: 4,
+          mb: 6,
+        }}
+      >
         <Box
           component="img"
           src={item.image}
           alt={item.name}
-          sx={{ width: { xs: "100%", md: 320 }, borderRadius: 1, flexShrink: 0 }}
+          sx={{
+            width: { xs: "100%", md: 320 },
+            borderRadius: 1,
+            flexShrink: 0,
+          }}
         />
 
         <Box>
-          <Chip label={categoryLabel[item.category]} color="primary" variant="outlined" size="small" sx={{ mb: 2 }} />
+          <Chip
+            label={categoryLabel[item.category]}
+            color="primary"
+            variant="outlined"
+            size="small"
+            sx={{ mb: 2 }}
+          />
           <Typography variant="h3" sx={{ mb: 1 }}>
             {item.name}
           </Typography>
@@ -158,16 +186,25 @@ export default function ProductDetail() {
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 5 }}>
         {reviews.length === 0 && (
-          <Typography color="text.secondary">Ainda não há reviews para este item.</Typography>
+          <Typography color="text.secondary">
+            Ainda não há reviews para este item.
+          </Typography>
         )}
 
         {reviews.map((r) => (
           <Paper key={r.id} sx={{ p: 2, display: "flex", gap: 2 }}>
-            <Avatar sx={{ bgcolor: "primary.main" }}>{r.author.charAt(0).toUpperCase()}</Avatar>
+            <Avatar sx={{ bgcolor: "primary.main" }}>
+              {r.author.charAt(0).toUpperCase()}
+            </Avatar>
             <Box>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Typography sx={{ fontWeight: 700 }}>{r.author}</Typography>
-                <Rating value={r.score / 2} precision={0.5} readOnly size="small" />
+                <Rating
+                  value={r.score / 2}
+                  precision={0.5}
+                  readOnly
+                  size="small"
+                />
               </Box>
               {r.titulo && (
                 <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
@@ -184,18 +221,30 @@ export default function ProductDetail() {
 
       {/* Formulário de nova review */}
       {isAuthenticated ? (
-        <Paper sx={{ p: 3, maxWidth: 500 }} component="form" onSubmit={handleSubmitReview}>
+        <Paper
+          sx={{ p: 3, maxWidth: 500 }}
+          component="form"
+          onSubmit={handleSubmitReview}
+        >
           <Typography variant="h6" sx={{ mb: 2 }}>
             Deixar uma review
           </Typography>
 
           {sent && (
-            <Alert severity="success" sx={{ mb: 2 }} onClose={() => setSent(false)}>
+            <Alert
+              severity="success"
+              sx={{ mb: 2 }}
+              onClose={() => setSent(false)}
+            >
               Review publicada com sucesso.
             </Alert>
           )}
           {formError && (
-            <Alert severity="error" sx={{ mb: 2 }} onClose={() => setFormError("")}>
+            <Alert
+              severity="error"
+              sx={{ mb: 2 }}
+              onClose={() => setFormError("")}
+            >
               {formError}
             </Alert>
           )}
@@ -228,7 +277,12 @@ export default function ProductDetail() {
             sx={{ mb: 2 }}
           />
 
-          <Button type="submit" variant="contained" color="primary" disabled={submitting}>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={submitting}
+          >
             {submitting ? "A publicar..." : "Publicar review"}
           </Button>
         </Paper>

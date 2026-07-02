@@ -3,7 +3,11 @@ import api from "./api";
 // Mapeia o slug de categoria usado no frontend para o recurso REST
 // e para o "tipo_alvo" usado nas reviews/favoritos.
 const RESOURCE = { jogos: "jogos", media: "midia", literatura: "literatura" };
-export const TIPO_ALVO = { jogos: "jogo", media: "midia", literatura: "literatura" };
+export const TIPO_ALVO = {
+  jogos: "jogo",
+  media: "midia",
+  literatura: "literatura",
+};
 
 const cover = (text) =>
   `https://placehold.co/500x700/1a1e1e/d50d14?font=roboto&text=${encodeURIComponent(text || "?")}`;
@@ -15,7 +19,10 @@ function normalize(category, dados) {
     id: dados.id,
     category,
     name: dados.nome,
-    author: category === "literatura" ? dados.autor || dados.publisher?.nome : dados.publisher?.nome,
+    author:
+      category === "literatura"
+        ? dados.autor || dados.publisher?.nome
+        : dados.publisher?.nome,
     year: dados.ano_lancamento ?? dados.ano_publicacao ?? null,
     image: dados.imagem_url || cover(dados.nome),
     description: dados.descricao || "",
@@ -37,9 +44,17 @@ function denormalize(category, form) {
     return { ...base, ano_lancamento: form.ano ? Number(form.ano) : null };
   }
   if (category === "media") {
-    return { ...base, ano_lancamento: form.ano ? Number(form.ano) : null, tipo: form.tipo };
+    return {
+      ...base,
+      ano_lancamento: form.ano ? Number(form.ano) : null,
+      tipo: form.tipo,
+    };
   }
-  return { ...base, ano_publicacao: form.ano ? Number(form.ano) : null, autor: form.autor || null };
+  return {
+    ...base,
+    ano_publicacao: form.ano ? Number(form.ano) : null,
+    autor: form.autor || null,
+  };
 }
 
 // Junta a pontuação média das reviews a uma lista de itens já normalizados.
@@ -70,12 +85,18 @@ class CatalogService {
   }
 
   async create(category, form) {
-    const res = await api.post(`/${RESOURCE[category]}`, denormalize(category, form));
+    const res = await api.post(
+      `/${RESOURCE[category]}`,
+      denormalize(category, form),
+    );
     return normalize(category, res.data.data);
   }
 
   async update(category, id, form) {
-    const res = await api.put(`/${RESOURCE[category]}/${id}`, denormalize(category, form));
+    const res = await api.put(
+      `/${RESOURCE[category]}/${id}`,
+      denormalize(category, form),
+    );
     return normalize(category, res.data.data);
   }
 
