@@ -128,7 +128,7 @@ export default function AdminDashboard() {
         </Table>
       </Paper>
 
-      {/* Dialog usado tanto para criar como para editar */}
+      {/* Dialog usado para criar e editar */}
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="xs">
         <DialogTitle>{form.id ? "Editar item" : "Novo item"}</DialogTitle>
         <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, pt: 1 }}>
