@@ -14,6 +14,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import PageNotFound from "./components/PageNotFound";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -40,15 +41,7 @@ export default function App() {
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Box>
-
-          <Box
-            component="footer"
-            sx={{ borderTop: "1px solid", borderColor: "divider", py: 3 }}
-          >
-            <Typography variant="body2" color="text.secondary" align="center">
-              Oblivion — Projeto académico, Programação III (ISMT, 2025/2026)
-            </Typography>
-          </Box>
+          <Footer />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
